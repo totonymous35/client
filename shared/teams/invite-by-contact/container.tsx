@@ -86,7 +86,7 @@ const fetchContacts = async (): Promise<[Array<ContactProps>, string]> => {
 // to derive E164 phone number based on seitan invite name and user's region.
 const extractPhoneNumber = (name: string, region: string): string | null => {
   const matches = /\((.*)\)/.exec(name)
-  const maybeNumber = matches && matches[1] && matches[1].replace(/\D/g, '')
+  const maybeNumber = matches && matches[1] && matches[1].replace(/[^0-9+]/g, '')
   return maybeNumber ? SettingsConstants.getE164(maybeNumber, region) : null
 }
 
