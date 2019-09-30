@@ -9,6 +9,7 @@ import * as Styles from '../../styles'
 import * as TeamsGen from '../../actions/teams-gen'
 import {e164ToDisplay} from '../../util/phone-numbers'
 import {FloatingRolePicker} from '../role-picker'
+import {NativeModules} from 'react-native'
 import {pluralize} from '../../util/string'
 import {TeamRoleType} from '../../constants/types/teams'
 import logger from '../../logger'
@@ -23,7 +24,16 @@ type ContactProps = {
   valueFormatted?: string
 }
 
-const fetchContacts = async () => {
+// for sorting
+const strcmp = (a, b) => (a === b ? 0 : a > b ? 1 : -1)
+const compareContacts = (a: ContactProps, b: ContactProps): number => {
+  if (a.name === b.name) {
+    return strcmp(a.value, b.value)
+  }
+  return strcmp(a.name, b.name)
+}
+
+const fetchContacts = async (): Promise<[Array<ContactProps>, string]> => {
   const contacts = await Contacts.getContactsAsync({
     fields: [
       Contacts.Fields.Name,
@@ -68,12 +78,36 @@ const fetchContacts = async () => {
     })
     return ret
   }, [])
-  const strcmp = (a, b) => (a === b ? 0 : a > b ? 1 : -1)
-  mapped.sort((a, b) => strcmp(a.name, b.name))
-  return mapped
+  mapped.sort(compareContacts)
+  return [mapped, defaultCountryCode]
+}
+
+// Seitan invite names (labels) look like this: "[name] ([phone number])". Try
+// to derive E164 phone number based on seitan invite name and user's region.
+const extractPhoneNumber = (name: string, region: string): string | null => {
+  const matches = /\((.*)\)/.exec(name)
+  const maybeNumber = matches && matches[1] && matches[1].replace(/\D/g, '')
+  return maybeNumber ? SettingsConstants.getE164(maybeNumber, region) : null
+}
+
+// Extract either emails or phone numbers from team invites, to match to
+// contacts and show whether the contact is invited already or not.
+const mapExistingInvitesToValues = (invites: ReturnType<typeof Constants.getTeamInvites>, region: string) => {
+  return invites
+    .map(invite => {
+      if (invite.email) {
+        return invite.email
+      } else if (invite.name) {
+        return extractPhoneNumber(invite.name, region)
+      } else {
+        return null
+      }
+    })
+    .filter(Boolean)
 }
 
 type ContactRowProps = ContactProps & {
+  id: string
   alreadyInvited: boolean
   loading: boolean
   onClick: () => void
@@ -137,6 +171,7 @@ const TeamInviteByContact = (props: OwnProps) => {
   const teamname = Container.getRouteProps(props, 'teamname', '')
 
   const [contacts, setContacts] = React.useState([] as Array<ContactProps>)
+  const [region, setRegion] = React.useState('')
   const [hasError, setHasError] = React.useState<string | null>(null)
   const [isRolePickerOpen, setIsRolePickerOpen] = React.useState(false)
   const [selectedRole, setSelectedRole] = React.useState('writer' as TeamRoleType)
@@ -144,13 +179,14 @@ const TeamInviteByContact = (props: OwnProps) => {
 
   const permStatus = Container.useSelector(s => s.settings.contacts.permissionStatus)
   const teamInvites = Container.useSelector(s => Constants.getTeamInvites(s, teamname))
+  const loadingInvites = Container.useSelector(s => Constants.getTeamLoadingInvites(s, teamname))
 
   React.useEffect(() => {
     if (permStatus === 'granted') {
       fetchContacts().then(
-        val => {
-          setContacts(val)
-          console.log('zzz', val)
+        ([contacts, region]) => {
+          setContacts(contacts)
+          setRegion(region)
         },
         err => {
           logger.warn('Error fetching contaxts:', err)
@@ -183,12 +219,20 @@ const TeamInviteByContact = (props: OwnProps) => {
     [setSelectedRole]
   )
 
-  const listItems = contacts.map(contact => ({
-    ...contact,
-    alreadyInvited: false,
-    loading: false,
-    onClick: () => {},
-  }))
+  const teamAlreadyInvited = mapExistingInvitesToValues(teamInvites, region)
+
+  const listItems = contacts.map(contact => {
+    const id = [contact.type, contact.value, contact.name].join('+')
+    const loading = contact.type === 'email' && loadingInvites.has(contact.value)
+    const alreadyInvited = teamAlreadyInvited.has(contact.value)
+    return {
+      ...contact,
+      id,
+      alreadyInvited,
+      loading,
+      onClick: () => {},
+    }
+  })
 
   return (
     <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
