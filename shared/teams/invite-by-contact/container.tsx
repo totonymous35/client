@@ -91,19 +91,44 @@ const extractPhoneNumber = (name: string, region: string): string | null => {
 }
 
 // Extract either emails or phone numbers from team invites, to match to
-// contacts and show whether the contact is invited already or not.
-const mapExistingInvitesToValues = (invites: ReturnType<typeof Constants.getTeamInvites>, region: string) => {
-  return invites
-    .map(invite => {
-      if (invite.email) {
-        return invite.email
-      } else if (invite.name) {
-        return extractPhoneNumber(invite.name, region)
-      } else {
-        return null
+// contacts and show whether the contact is invited already or not. Returns a
+// mapping of potential contact values to invite IDs.
+const mapExistingInvitesToValues = (
+  invites: ReturnType<typeof Constants.getTeamInvites>,
+  region: string
+): Map<string, string> => {
+  const ret = new Map<string, string>()
+  invites.forEach(invite => {
+    if (invite.email) {
+      // Email invite - just use email as the key.
+      ret.set(invite.email, invite.id)
+    } else if (invite.name) {
+      // Seitan invite. Extract phone number from invite name and use as the
+      // key. The extracted phone number will be full E164.
+      const val = extractPhoneNumber(invite.name, region)
+      if (val) {
+        ret.set(val, invite.id)
       }
-    })
-    .filter(Boolean)
+    }
+  })
+  return ret
+}
+
+const getLoadingKey = (contact: ContactProps, inviteID: string | undefined): string | undefined => {
+  if (inviteID) {
+    // Contact is already invited, our loadingkey is the inviteID, because
+    // that's what we use for canceling invites.
+    return inviteID
+  }
+  // Otherwise loading key is the value used for creating the invite.
+  switch (contact.type) {
+    case 'phone':
+      // We create phone invites with formatted value for nicer labels.
+      return contact.valueFormatted || contact.value
+    case 'email':
+      // We are never formatting emails let alone use formatted strings for invites.
+      return contact.value
+  }
 }
 
 type ContactRowProps = ContactProps & {
@@ -219,18 +244,62 @@ const TeamInviteByContact = (props: OwnProps) => {
     [setSelectedRole]
   )
 
+  const onInviteContact = React.useCallback(
+    (contact: ContactProps) => {
+      dispatch(TeamsGen.createSetEmailInviteError({malformed: [], message: ''}))
+      if (contact.type === 'email') {
+        dispatch(
+          TeamsGen.createInviteToTeamByEmail({
+            invitees: contact.value,
+            role: selectedRole,
+            teamname,
+          })
+        )
+      } else if (contact.type === 'phone') {
+        dispatch(
+          TeamsGen.createInviteToTeamByPhone({
+            fullName: contact.name,
+            phoneNumber: contact.valueFormatted || contact.value,
+            role: selectedRole,
+            teamname,
+          })
+        )
+      }
+      dispatch(TeamsGen.createGetTeams())
+    },
+    [dispatch, selectedRole, teamname]
+  )
+
+  const onCancelInvite = React.useCallback(
+    (inviteID: string) => {
+      dispatch(TeamsGen.createSetEmailInviteError({malformed: [], message: ''}))
+      dispatch(
+        TeamsGen.createRemoveMemberOrPendingInvite({
+          email: '',
+          inviteID,
+          teamname,
+          username: '',
+        })
+      )
+    },
+    [dispatch, teamname]
+  )
+
   const teamAlreadyInvited = mapExistingInvitesToValues(teamInvites, region)
 
   const listItems = contacts.map(contact => {
     const id = [contact.type, contact.value, contact.name].join('+')
-    const loading = contact.type === 'email' && loadingInvites.has(contact.value)
-    const alreadyInvited = teamAlreadyInvited.has(contact.value)
+    const inviteID = teamAlreadyInvited.get(contact.value)
+    const loadingKey = getLoadingKey(contact, inviteID)
+    const loading = loadingKey ? loadingInvites.get(loadingKey, false) : false
+    const onClick = inviteID ? () => onCancelInvite(inviteID) : () => onInviteContact(contact)
+
     return {
       ...contact,
       id,
-      alreadyInvited,
+      alreadyInvited: !!inviteID,
       loading,
-      onClick: () => {},
+      onClick,
     }
   })
 
