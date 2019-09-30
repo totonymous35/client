@@ -16,6 +16,7 @@ import logger from '../../logger'
 
 type OwnProps = Container.RouteProps<{teamname: string}>
 
+// Contact info that we get from Contacts library.
 type ContactProps = {
   name: string
   pictureUri?: string
@@ -131,6 +132,7 @@ const getLoadingKey = (contact: ContactProps, inviteID: string | undefined): str
   }
 }
 
+// Contact info + other things needed for list row.
 type ContactRowProps = ContactProps & {
   id: string
   alreadyInvited: boolean
@@ -285,9 +287,19 @@ const TeamInviteByContact = (props: OwnProps) => {
     [dispatch, teamname]
   )
 
+  const onSetFilter = React.useCallback(
+    (s: string) => {
+      setFilter(s)
+    },
+    [setFilter]
+  )
+
+  // ----
+
   const teamAlreadyInvited = mapExistingInvitesToValues(teamInvites, region)
 
-  const listItems = contacts.map(contact => {
+  let listItems = contacts.map(contact => {
+    // `id` is the key property for Kb.List
     const id = [contact.type, contact.value, contact.name].join('+')
     const inviteID = teamAlreadyInvited.get(contact.value)
     const loadingKey = getLoadingKey(contact, inviteID)
@@ -303,12 +315,48 @@ const TeamInviteByContact = (props: OwnProps) => {
     }
   })
 
+  if (filter) {
+    listItems = listItems.filter(row =>
+      [row.name, row.value, row.valueFormatted].some(
+        s =>
+          s &&
+          s
+            .replace(/^[^a-z0-9@._+()]/i, '')
+            .toLowerCase()
+            .includes(filter)
+      )
+    )
+  }
+
   return (
     <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
       <Kb.HeaderHocHeader onBack={onBack} title="Invite contacts" />
       <Kb.Box
         style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
       >
+        <Kb.Box
+          style={{
+            ...Styles.globalStyles.flexBoxRow,
+            borderBottomColor: Styles.globalColors.black_10,
+            borderBottomWidth: Styles.hairlineWidth,
+          }}
+        >
+          <Kb.Input
+            keyboardType="email-address"
+            value={filter}
+            onChangeText={onSetFilter}
+            hintText="Search"
+            hideUnderline={true}
+            small={true}
+            style={{width: '100%'}}
+            errorStyle={{minHeight: 14}}
+            inputStyle={{
+              fontSize: 16,
+              margin: Styles.globalMargins.small,
+              textAlign: 'left',
+            }}
+          />
+        </Kb.Box>
         <FloatingRolePicker
           confirmLabel={`Invite as ${pluralize(selectedRole)}`}
           selectedRole={selectedRole}
