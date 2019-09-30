@@ -6,6 +6,7 @@ import * as React from 'react'
 import * as SettingsConstants from '../../constants/settings'
 import * as SettingsGen from '../../actions/settings-gen'
 import * as Styles from '../../styles'
+import * as TeamsGen from '../../actions/teams-gen'
 import {e164ToDisplay} from '../../util/phone-numbers'
 import {FloatingRolePicker} from '../role-picker'
 import {pluralize} from '../../util/string'
@@ -48,7 +49,6 @@ const fetchContacts = async () => {
   const mapped = contacts.data.reduce<Array<ContactProps>>((ret, contact) => {
     const {name, phoneNumbers = [], emails = []} = contact
     let pictureUri: string | undefined
-    console.log('zzz', contact)
     if (contact.imageAvailable && contact.image && contact.image.uri) {
       pictureUri = contact.image.uri
     }
@@ -73,7 +73,13 @@ const fetchContacts = async () => {
   return mapped
 }
 
-const contactRow = (_: number, props: ContactProps) => {
+type ContactRowProps = ContactProps & {
+  alreadyInvited: boolean
+  loading: boolean
+  onClick: () => void
+}
+
+const contactRow = (_: number, props: ContactRowProps) => {
   const hasThumbnail = !!props.pictureUri
   const source = props.pictureUri ? {uri: props.pictureUri} : null
 
@@ -108,8 +114,8 @@ const contactRow = (_: number, props: ContactProps) => {
         <Kb.Box>
           <Kb.Button
             type="Success"
-            mode={props.selected ? 'Secondary' : 'Primary'}
-            label={props.selected ? 'Invited!' : 'Invite'}
+            mode={props.alreadyInvited ? 'Secondary' : 'Primary'}
+            label={props.alreadyInvited ? 'Invited!' : 'Invite'}
             waiting={props.loading}
             small={true}
             onClick={props.onClick}
@@ -131,7 +137,7 @@ const TeamInviteByContact = (props: OwnProps) => {
   const teamname = Container.getRouteProps(props, 'teamname', '')
 
   const [contacts, setContacts] = React.useState([] as Array<ContactProps>)
-  const [hasError, setHasError] = React.useState(false)
+  const [hasError, setHasError] = React.useState<string | null>(null)
   const [isRolePickerOpen, setIsRolePickerOpen] = React.useState(false)
   const [selectedRole, setSelectedRole] = React.useState('writer' as TeamRoleType)
   const [filter, setFilter] = React.useState('')
@@ -148,15 +154,22 @@ const TeamInviteByContact = (props: OwnProps) => {
         },
         err => {
           logger.warn('Error fetching contaxts:', err)
-          setHasError(true)
+          setHasError(err.message)
         }
       )
-    } else if (permStatus === 'unknown' || permStatus === 'undetermined') {
+    }
+  }, [dispatch, setHasError, setContacts, permStatus])
+
+  React.useEffect(() => {
+    if (permStatus === 'unknown' || permStatus === 'undetermined') {
       dispatch(SettingsGen.createRequestContactPermissions({thenToggleImportOn: false}))
     }
   }, [dispatch, permStatus])
 
-  const onBack = React.useCallback(() => dispatch(nav.safeNavigateUpPayload()), [dispatch, nav])
+  const onBack = React.useCallback(() => {
+    dispatch(nav.safeNavigateUpPayload())
+    dispatch(TeamsGen.createSetEmailInviteError({malformed: [], message: ''}))
+  }, [dispatch, nav])
   const controlRolePicker = React.useCallback(
     (open: boolean) => {
       setIsRolePickerOpen(open)
@@ -170,46 +183,56 @@ const TeamInviteByContact = (props: OwnProps) => {
     [setSelectedRole]
   )
 
+  const listItems = contacts.map(contact => ({
+    ...contact,
+    alreadyInvited: false,
+    loading: false,
+    onClick: () => {},
+  }))
+
   return (
-    <Kb.Box
-      style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
-    >
-      <FloatingRolePicker
-        confirmLabel={`Invite as ${pluralize(selectedRole)}`}
-        selectedRole={selectedRole}
-        onSelectRole={onRoleChange}
-        onConfirm={() => controlRolePicker(false)}
-        open={isRolePickerOpen}
-        position="bottom center"
-        disabledRoles={{owner: 'Cannot invite an owner via email.'}}
-      />
-      <Kb.List
-        keyProperty="id"
-        items={contacts.map(x => ({...x, selected: false, loading: false}))}
-        fixedHeight={56}
-        ListHeaderComponent={
-          <Kb.ClickableBox
-            onClick={() => controlRolePicker(true)}
-            style={{
-              ...Styles.globalStyles.flexBoxColumn,
-              alignItems: 'center',
-              borderBottomColor: Styles.globalColors.black_10,
-              borderBottomWidth: Styles.hairlineWidth,
-              justifyContent: 'center',
-              marginBottom: Styles.globalMargins.xtiny,
-              padding: Styles.globalMargins.small,
-            }}
-          >
-            <Kb.Text center={true} type="BodySmall">
-              Users will be invited to {teamname} as
-              <Kb.Text type="BodySmallPrimaryLink">{' ' + selectedRole + 's'}</Kb.Text>.
-            </Kb.Text>
-          </Kb.ClickableBox>
-        }
-        renderItem={contactRow}
-        style={{alignSelf: 'stretch'}}
-      />
-    </Kb.Box>
+    <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
+      <Kb.HeaderHocHeader onBack={onBack} title="Invite contacts" />
+      <Kb.Box
+        style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
+      >
+        <FloatingRolePicker
+          confirmLabel={`Invite as ${pluralize(selectedRole)}`}
+          selectedRole={selectedRole}
+          onSelectRole={onRoleChange}
+          onConfirm={() => controlRolePicker(false)}
+          open={isRolePickerOpen}
+          position="bottom center"
+          disabledRoles={{owner: 'Cannot invite an owner via email.'}}
+        />
+        <Kb.List
+          keyProperty="id"
+          items={listItems}
+          fixedHeight={56}
+          ListHeaderComponent={
+            <Kb.ClickableBox
+              onClick={() => controlRolePicker(true)}
+              style={{
+                ...Styles.globalStyles.flexBoxColumn,
+                alignItems: 'center',
+                borderBottomColor: Styles.globalColors.black_10,
+                borderBottomWidth: Styles.hairlineWidth,
+                justifyContent: 'center',
+                marginBottom: Styles.globalMargins.xtiny,
+                padding: Styles.globalMargins.small,
+              }}
+            >
+              <Kb.Text center={true} type="BodySmall">
+                Users will be invited to {teamname} as
+                <Kb.Text type="BodySmallPrimaryLink">{' ' + selectedRole + 's'}</Kb.Text>.
+              </Kb.Text>
+            </Kb.ClickableBox>
+          }
+          renderItem={contactRow}
+          style={{alignSelf: 'stretch'}}
+        />
+      </Kb.Box>
+    </Kb.Box2>
   )
 }
 
