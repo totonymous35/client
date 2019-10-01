@@ -59,6 +59,7 @@ const load = () => {
         </NewFeatureWrapper>
       ))
     )
+    .add('Popup', () => null)
 }
 
 const modalWidth = 284

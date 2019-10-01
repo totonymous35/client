@@ -4,8 +4,10 @@ import * as Styles from '../styles'
 
 type Props = {
   newFeatures: boolean
+  onClick?: ((event: React.BaseSyntheticEvent) => void) | null
 }
 
+// TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
 const realCSS = `
   .rainbowGradient {
     -webkit-background-clip: text !important;
@@ -17,11 +19,16 @@ const HeaderIcon = (props: Props) =>
     Styles.isMobile ? null : (
       <>
         <Kb.DesktopStyle style={realCSS} />
-        <Kb.Icon type="iconfont-radio" style={styles.rainbowColor} className="rainbowGradient" />
+        <Kb.Icon
+          type="iconfont-radio"
+          style={styles.rainbowColor}
+          className="rainbowGradient"
+          onClick={props.onClick}
+        />
       </>
     )
   ) : (
-    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} />
+    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} onClick={props.onClick} />
   )
 
 const styles = Styles.styleSheetCreate(() => ({
