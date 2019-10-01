@@ -115,23 +115,6 @@ const mapExistingInvitesToValues = (
   return ret
 }
 
-const getLoadingKey = (contact: ContactProps, inviteID: string | undefined): string | undefined => {
-  if (inviteID) {
-    // Contact is already invited, our loadingkey is the inviteID, because
-    // that's what we use for canceling invites.
-    return inviteID
-  }
-  // Otherwise loading key is the value used for creating the invite.
-  switch (contact.type) {
-    case 'phone':
-      // We create phone invites with formatted value for nicer labels.
-      return contact.valueFormatted || contact.value
-    case 'email':
-      // We are never formatting emails let alone use formatted strings for invites.
-      return contact.value
-  }
-}
-
 // Contact info + other things needed for list row.
 type ContactRowProps = ContactProps & {
   id: string
@@ -253,6 +236,7 @@ const TeamInviteByContact = (props: OwnProps) => {
         dispatch(
           TeamsGen.createInviteToTeamByEmail({
             invitees: contact.value,
+            loadingKey: contact.value,
             role: selectedRole,
             teamname,
           })
@@ -261,6 +245,7 @@ const TeamInviteByContact = (props: OwnProps) => {
         dispatch(
           TeamsGen.createInviteToTeamByPhone({
             fullName: contact.name,
+            loadingKey: contact.value,
             phoneNumber: contact.valueFormatted || contact.value,
             role: selectedRole,
             teamname,
@@ -279,6 +264,7 @@ const TeamInviteByContact = (props: OwnProps) => {
         TeamsGen.createRemoveMemberOrPendingInvite({
           email: '',
           inviteID,
+          loadingKey: inviteID,
           teamname,
           username: '',
         })
@@ -302,14 +288,18 @@ const TeamInviteByContact = (props: OwnProps) => {
     // `id` is the key property for Kb.List
     const id = [contact.type, contact.value, contact.name].join('+')
     const inviteID = teamAlreadyInvited.get(contact.value)
-    const loadingKey = getLoadingKey(contact, inviteID)
-    const loading = loadingKey ? loadingInvites.get(loadingKey, false) : false
+
+    // `loadingKey` is inviteID when invite already (so loading is canceling the
+    // invite), or contact.value when loading is adding an invite.
+    const loadingKey = inviteID || contact.value
+    const loading = loadingInvites.get(loadingKey, false)
+
     const onClick = inviteID ? () => onCancelInvite(inviteID) : () => onInviteContact(contact)
 
     return {
       ...contact,
-      id,
       alreadyInvited: !!inviteID,
+      id,
       loading,
       onClick,
     }

@@ -43,8 +43,8 @@ const rootReducer = (
       )
     case TeamsGen.setTeamLoadingInvites:
       return state.setIn(
-        ['teamNameToLoadingInvites', action.payload.teamname, action.payload.invitees],
-        action.payload.loadingInvites
+        ['teamNameToLoadingInvites', action.payload.teamname, action.payload.loadingKey],
+        action.payload.isLoading
       )
     case TeamsGen.clearTeamRequests:
       return state.setIn(['teamNameToRequests', action.payload.teamname], I.Set())
