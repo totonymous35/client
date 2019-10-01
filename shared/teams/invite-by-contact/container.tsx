@@ -1,29 +1,18 @@
 import * as Constants from '../../constants/teams'
 import * as Contacts from 'expo-contacts'
 import * as Container from '../../util/container'
-import * as Kb from '../../common-adapters/mobile.native'
 import * as React from 'react'
 import * as SettingsConstants from '../../constants/settings'
 import * as SettingsGen from '../../actions/settings-gen'
-import * as Styles from '../../styles'
 import * as TeamsGen from '../../actions/teams-gen'
 import {e164ToDisplay} from '../../util/phone-numbers'
-import {FloatingRolePicker} from '../role-picker'
 import {NativeModules} from 'react-native'
-import {pluralize} from '../../util/string'
 import {TeamRoleType} from '../../constants/types/teams'
 import logger from '../../logger'
 
-type OwnProps = Container.RouteProps<{teamname: string}>
+import {ContactProps, ContactRowProps, InviteByContact} from '.'
 
-// Contact info that we get from Contacts library.
-type ContactProps = {
-  name: string
-  pictureUri?: string
-  type: 'phone' | 'email'
-  value: string
-  valueFormatted?: string
-}
+type OwnProps = Container.RouteProps<{teamname: string}>
 
 // for sorting
 const strcmp = (a, b) => (a === b ? 0 : a > b ? 1 : -1)
@@ -115,66 +104,6 @@ const mapExistingInvitesToValues = (
   return ret
 }
 
-// Contact info + other things needed for list row.
-type ContactRowProps = ContactProps & {
-  id: string
-  alreadyInvited: boolean
-  loading: boolean
-  onClick: () => void
-}
-
-const contactRow = (_: number, props: ContactRowProps) => {
-  const hasThumbnail = !!props.pictureUri
-  const source = props.pictureUri ? {uri: props.pictureUri} : null
-
-  return (
-    <Kb.Box
-      style={{
-        ...Styles.globalStyles.flexBoxRow,
-        alignItems: 'center',
-        height: 56,
-        padding: Styles.globalMargins.small,
-        width: '100%',
-      }}
-    >
-      <Kb.Box style={{...Styles.globalStyles.flexBoxRow, alignItems: 'center', flex: 1}}>
-        <Kb.Box style={{...Styles.globalStyles.flexBoxRow, alignItems: 'center', flex: 1}}>
-          {!!hasThumbnail && !!source && (
-            <Kb.NativeImage
-              style={{borderRadius: 24, height: 48, marginRight: 16, width: 48}}
-              source={source}
-            />
-          )}
-          {!hasThumbnail && <Kb.Avatar size={48} style={{marginRight: 16}} />}
-          <Kb.Box>
-            <Kb.Box style={Styles.globalStyles.flexBoxRow}>
-              <Kb.Text type="BodySemibold">{props.name}</Kb.Text>
-            </Kb.Box>
-            <Kb.Box style={Styles.globalStyles.flexBoxRow}>
-              <Kb.Text type="BodySmall">{props.valueFormatted || props.value}</Kb.Text>
-            </Kb.Box>
-          </Kb.Box>
-        </Kb.Box>
-        <Kb.Box>
-          <Kb.Button
-            type="Success"
-            mode={props.alreadyInvited ? 'Secondary' : 'Primary'}
-            label={props.alreadyInvited ? 'Invited!' : 'Invite'}
-            waiting={props.loading}
-            small={true}
-            onClick={props.onClick}
-            style={{
-              paddingLeft: Styles.globalMargins.small,
-              paddingRight: Styles.globalMargins.small,
-              width: 100,
-            }}
-          />
-        </Kb.Box>
-      </Kb.Box>
-    </Kb.Box>
-  )
-}
-
 const TeamInviteByContact = (props: OwnProps) => {
   const dispatch = Container.useDispatch()
   const nav = Container.useSafeNavigation()
@@ -182,8 +111,7 @@ const TeamInviteByContact = (props: OwnProps) => {
 
   const [contacts, setContacts] = React.useState([] as Array<ContactProps>)
   const [region, setRegion] = React.useState('')
-  const [hasError, setHasError] = React.useState<string | null>(null)
-  const [isRolePickerOpen, setIsRolePickerOpen] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [selectedRole, setSelectedRole] = React.useState('writer' as TeamRoleType)
   const [filter, setFilter] = React.useState('')
 
@@ -197,14 +125,15 @@ const TeamInviteByContact = (props: OwnProps) => {
         ([contacts, region]) => {
           setContacts(contacts)
           setRegion(region)
+          setErrorMessage(null)
         },
         err => {
           logger.warn('Error fetching contaxts:', err)
-          setHasError(err.message)
+          setErrorMessage(err.message)
         }
       )
     }
-  }, [dispatch, setHasError, setContacts, permStatus])
+  }, [dispatch, setErrorMessage, setContacts, permStatus])
 
   React.useEffect(() => {
     if (permStatus === 'unknown' || permStatus === 'undetermined') {
@@ -216,12 +145,7 @@ const TeamInviteByContact = (props: OwnProps) => {
     dispatch(nav.safeNavigateUpPayload())
     dispatch(TeamsGen.createSetEmailInviteError({malformed: [], message: ''}))
   }, [dispatch, nav])
-  const controlRolePicker = React.useCallback(
-    (open: boolean) => {
-      setIsRolePickerOpen(open)
-    },
-    [setIsRolePickerOpen]
-  )
+
   const onRoleChange = React.useCallback(
     (role: TeamRoleType) => {
       setSelectedRole(role)
@@ -284,7 +208,7 @@ const TeamInviteByContact = (props: OwnProps) => {
 
   const teamAlreadyInvited = mapExistingInvitesToValues(teamInvites, region)
 
-  let listItems = contacts.map(contact => {
+  let listItems: Array<ContactRowProps> = contacts.map(contact => {
     // `id` is the key property for Kb.List
     const id = [contact.type, contact.value, contact.name].join('+')
     const inviteID = teamAlreadyInvited.get(contact.value)
@@ -319,71 +243,16 @@ const TeamInviteByContact = (props: OwnProps) => {
   }
 
   return (
-    <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
-      <Kb.HeaderHocHeader onBack={onBack} title="Invite contacts" />
-      <Kb.Box
-        style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
-      >
-        <Kb.Box
-          style={{
-            ...Styles.globalStyles.flexBoxRow,
-            borderBottomColor: Styles.globalColors.black_10,
-            borderBottomWidth: Styles.hairlineWidth,
-          }}
-        >
-          <Kb.Input
-            keyboardType="email-address"
-            value={filter}
-            onChangeText={onSetFilter}
-            hintText="Search"
-            hideUnderline={true}
-            small={true}
-            style={{width: '100%'}}
-            errorStyle={{minHeight: 14}}
-            inputStyle={{
-              fontSize: 16,
-              margin: Styles.globalMargins.small,
-              textAlign: 'left',
-            }}
-          />
-        </Kb.Box>
-        <FloatingRolePicker
-          confirmLabel={`Invite as ${pluralize(selectedRole)}`}
-          selectedRole={selectedRole}
-          onSelectRole={onRoleChange}
-          onConfirm={() => controlRolePicker(false)}
-          open={isRolePickerOpen}
-          position="bottom center"
-          disabledRoles={{owner: 'Cannot invite an owner via email.'}}
-        />
-        <Kb.List
-          keyProperty="id"
-          items={listItems}
-          fixedHeight={56}
-          ListHeaderComponent={
-            <Kb.ClickableBox
-              onClick={() => controlRolePicker(true)}
-              style={{
-                ...Styles.globalStyles.flexBoxColumn,
-                alignItems: 'center',
-                borderBottomColor: Styles.globalColors.black_10,
-                borderBottomWidth: Styles.hairlineWidth,
-                justifyContent: 'center',
-                marginBottom: Styles.globalMargins.xtiny,
-                padding: Styles.globalMargins.small,
-              }}
-            >
-              <Kb.Text center={true} type="BodySmall">
-                Users will be invited to {teamname} as
-                <Kb.Text type="BodySmallPrimaryLink">{' ' + selectedRole + 's'}</Kb.Text>.
-              </Kb.Text>
-            </Kb.ClickableBox>
-          }
-          renderItem={contactRow}
-          style={{alignSelf: 'stretch'}}
-        />
-      </Kb.Box>
-    </Kb.Box2>
+    <InviteByContact
+      errorMessage={errorMessage}
+      filter={filter}
+      listItems={listItems}
+      onBack={onBack}
+      onRoleChange={onRoleChange}
+      onSetFilter={onSetFilter}
+      selectedRole={selectedRole}
+      teamName={teamname}
+    />
   )
 }
 
