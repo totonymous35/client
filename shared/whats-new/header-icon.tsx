@@ -6,10 +6,19 @@ type Props = {
   newFeatures: boolean
 }
 
+const realCSS = `
+  .rainbowGradient {
+    -webkit-background-clip: text !important;
+  }
+`
+
 const HeaderIcon = (props: Props) =>
   props.newFeatures ? (
     Styles.isMobile ? null : (
-      <Kb.Icon type="iconfont-radio" color="transparent" style={styles.rainbowColor} />
+      <>
+        <Kb.DesktopStyle style={realCSS} />
+        <Kb.Icon type="iconfont-radio" style={styles.rainbowColor} className="rainbowGradient" />
+      </>
     )
   ) : (
     <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} />
