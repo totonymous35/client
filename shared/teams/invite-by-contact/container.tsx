@@ -132,10 +132,15 @@ const TeamInviteByContact = (props: OwnProps) => {
           setErrorMessage(err.message)
         }
       )
+    } else if (permStatus === 'never_ask_again') {
+      setErrorMessage('Keybase does not have permission to access your contacts.')
     }
   }, [dispatch, setErrorMessage, setContacts, permStatus])
 
   React.useEffect(() => {
+    // Use a separate effect with limited amount of dependencies when deciding
+    // whether to dispatch `createRequestContactPermissions` so we never
+    // dispatch more than once.
     if (permStatus === 'unknown' || permStatus === 'undetermined') {
       dispatch(SettingsGen.createRequestContactPermissions({thenToggleImportOn: false}))
     }

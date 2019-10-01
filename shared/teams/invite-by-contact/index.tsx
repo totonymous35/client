@@ -113,68 +113,70 @@ export const InviteByContact = (props: InviteByContactProps) => {
           </Kb.Text>
         </Kb.Box2>
       )}
-      <Kb.Box
-        style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
-      >
+      {props.listItems.length > 0 && (
         <Kb.Box
-          style={{
-            ...Styles.globalStyles.flexBoxRow,
-            borderBottomColor: Styles.globalColors.black_10,
-            borderBottomWidth: Styles.hairlineWidth,
-          }}
+          style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
         >
-          <Kb.Input
-            keyboardType="email-address"
-            value={props.filter}
-            onChangeText={props.onSetFilter}
-            hintText="Search"
-            hideUnderline={true}
-            small={true}
-            style={{width: '100%'}}
-            errorStyle={{minHeight: 14}}
-            inputStyle={{
-              fontSize: 16,
-              margin: Styles.globalMargins.small,
-              textAlign: 'left',
+          <Kb.Box
+            style={{
+              ...Styles.globalStyles.flexBoxRow,
+              borderBottomColor: Styles.globalColors.black_10,
+              borderBottomWidth: Styles.hairlineWidth,
             }}
+          >
+            <Kb.Input
+              keyboardType="email-address"
+              value={props.filter}
+              onChangeText={props.onSetFilter}
+              hintText="Search"
+              hideUnderline={true}
+              small={true}
+              style={{width: '100%'}}
+              errorStyle={{minHeight: 14}}
+              inputStyle={{
+                fontSize: 16,
+                margin: Styles.globalMargins.small,
+                textAlign: 'left',
+              }}
+            />
+          </Kb.Box>
+          <FloatingRolePicker
+            confirmLabel={`Invite as ${pluralize(props.selectedRole)}`}
+            selectedRole={props.selectedRole}
+            onSelectRole={props.onRoleChange}
+            onConfirm={() => controlRolePicker(false)}
+            open={isRolePickerOpen}
+            position="bottom center"
+            disabledRoles={{owner: 'Cannot invite an owner via email.'}}
+          />
+          <Kb.List
+            keyProperty="id"
+            items={props.listItems}
+            fixedHeight={56}
+            ListHeaderComponent={
+              <Kb.ClickableBox
+                onClick={() => controlRolePicker(true)}
+                style={{
+                  ...Styles.globalStyles.flexBoxColumn,
+                  alignItems: 'center',
+                  borderBottomColor: Styles.globalColors.black_10,
+                  borderBottomWidth: Styles.hairlineWidth,
+                  justifyContent: 'center',
+                  marginBottom: Styles.globalMargins.xtiny,
+                  padding: Styles.globalMargins.small,
+                }}
+              >
+                <Kb.Text center={true} type="BodySmall">
+                  Users will be invited to {props.teamName} as
+                  <Kb.Text type="BodySmallPrimaryLink">{' ' + props.selectedRole + 's'}</Kb.Text>.
+                </Kb.Text>
+              </Kb.ClickableBox>
+            }
+            renderItem={contactRow}
+            style={{alignSelf: 'stretch'}}
           />
         </Kb.Box>
-        <FloatingRolePicker
-          confirmLabel={`Invite as ${pluralize(props.selectedRole)}`}
-          selectedRole={props.selectedRole}
-          onSelectRole={props.onRoleChange}
-          onConfirm={() => controlRolePicker(false)}
-          open={isRolePickerOpen}
-          position="bottom center"
-          disabledRoles={{owner: 'Cannot invite an owner via email.'}}
-        />
-        <Kb.List
-          keyProperty="id"
-          items={props.listItems}
-          fixedHeight={56}
-          ListHeaderComponent={
-            <Kb.ClickableBox
-              onClick={() => controlRolePicker(true)}
-              style={{
-                ...Styles.globalStyles.flexBoxColumn,
-                alignItems: 'center',
-                borderBottomColor: Styles.globalColors.black_10,
-                borderBottomWidth: Styles.hairlineWidth,
-                justifyContent: 'center',
-                marginBottom: Styles.globalMargins.xtiny,
-                padding: Styles.globalMargins.small,
-              }}
-            >
-              <Kb.Text center={true} type="BodySmall">
-                Users will be invited to {props.teamName} as
-                <Kb.Text type="BodySmallPrimaryLink">{' ' + props.selectedRole + 's'}</Kb.Text>.
-              </Kb.Text>
-            </Kb.ClickableBox>
-          }
-          renderItem={contactRow}
-          style={{alignSelf: 'stretch'}}
-        />
-      </Kb.Box>
+      )}
     </Kb.Box2>
   )
 }
