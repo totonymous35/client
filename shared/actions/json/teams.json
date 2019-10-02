@@ -146,7 +146,6 @@
       "teamname": "string",
       "username": "string",
       "inviteID": "string",
-      "loadingKey?": "string"
     },
     "ignoreRequest": {
       "teamname": "string",
@@ -182,11 +181,6 @@
     "setTeamRetentionPolicy": {
       "teamname": "string",
       "retentionPolicy": "RetentionPolicy"
-    },
-    "setTeamLoadingInvites": {
-      "teamname": "string",
-      "loadingKey": "string",
-      "isLoading": "boolean"
     },
     "clearTeamRequests": {
       "teamname": "string"

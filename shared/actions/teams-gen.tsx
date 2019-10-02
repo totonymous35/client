@@ -64,7 +64,6 @@ export const setTeamInfo = 'teams:setTeamInfo'
 export const setTeamInviteError = 'teams:setTeamInviteError'
 export const setTeamJoinError = 'teams:setTeamJoinError'
 export const setTeamJoinSuccess = 'teams:setTeamJoinSuccess'
-export const setTeamLoadingInvites = 'teams:setTeamLoadingInvites'
 export const setTeamProfileAddList = 'teams:setTeamProfileAddList'
 export const setTeamPublicitySettings = 'teams:setTeamPublicitySettings'
 export const setTeamRetentionPolicy = 'teams:setTeamRetentionPolicy'
@@ -177,7 +176,6 @@ type _RemoveMemberOrPendingInvitePayload = {
   readonly teamname: string
   readonly username: string
   readonly inviteID: string
-  readonly loadingKey?: string
 }
 type _RemoveParticipantPayload = {
   readonly teamname: string
@@ -234,11 +232,6 @@ type _SetTeamInfoPayload = {
 type _SetTeamInviteErrorPayload = {readonly error: string}
 type _SetTeamJoinErrorPayload = {readonly error: string}
 type _SetTeamJoinSuccessPayload = {readonly success: boolean; readonly teamname: string}
-type _SetTeamLoadingInvitesPayload = {
-  readonly teamname: string
-  readonly loadingKey: string
-  readonly isLoading: boolean
-}
 type _SetTeamProfileAddListPayload = {readonly teamlist: I.List<Types.TeamProfileAddList>}
 type _SetTeamPublicitySettingsPayload = {
   readonly teamname: string
@@ -484,9 +477,6 @@ export const createSetTeamJoinSuccess = (payload: _SetTeamJoinSuccessPayload): S
   payload,
   type: setTeamJoinSuccess,
 })
-export const createSetTeamLoadingInvites = (
-  payload: _SetTeamLoadingInvitesPayload
-): SetTeamLoadingInvitesPayload => ({payload, type: setTeamLoadingInvites})
 export const createSetTeamProfileAddList = (
   payload: _SetTeamProfileAddListPayload
 ): SetTeamProfileAddListPayload => ({payload, type: setTeamProfileAddList})
@@ -708,10 +698,6 @@ export type SetTeamJoinSuccessPayload = {
   readonly payload: _SetTeamJoinSuccessPayload
   readonly type: typeof setTeamJoinSuccess
 }
-export type SetTeamLoadingInvitesPayload = {
-  readonly payload: _SetTeamLoadingInvitesPayload
-  readonly type: typeof setTeamLoadingInvites
-}
 export type SetTeamProfileAddListPayload = {
   readonly payload: _SetTeamProfileAddListPayload
   readonly type: typeof setTeamProfileAddList
@@ -813,7 +799,6 @@ export type Actions =
   | SetTeamInviteErrorPayload
   | SetTeamJoinErrorPayload
   | SetTeamJoinSuccessPayload
-  | SetTeamLoadingInvitesPayload
   | SetTeamProfileAddListPayload
   | SetTeamPublicitySettingsPayload
   | SetTeamRetentionPolicyPayload

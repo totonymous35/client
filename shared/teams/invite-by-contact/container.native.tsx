@@ -116,7 +116,7 @@ const TeamInviteByContact = (props: OwnProps) => {
 
   const permStatus = Container.useSelector(s => s.settings.contacts.permissionStatus)
   const teamInvites = Container.useSelector(s => Constants.getTeamInvites(s, teamname))
-  const loadingInvites = Container.useSelector(s => Constants.getTeamLoadingInvites(s, teamname))
+  const allWaiting = Container.useSelector(s => s.waiting.counts)
 
   React.useEffect(() => {
     if (permStatus === 'granted') {
@@ -160,11 +160,12 @@ const TeamInviteByContact = (props: OwnProps) => {
   const onInviteContact = React.useCallback(
     (contact: ContactProps) => {
       dispatch(TeamsGen.createSetEmailInviteError({malformed: [], message: ''}))
+      const loadingKey = Constants.addInviteWaitingKey(teamname, contact.value)
       if (contact.type === 'email') {
         dispatch(
           TeamsGen.createInviteToTeamByEmail({
             invitees: contact.value,
-            loadingKey: contact.value,
+            loadingKey,
             role: selectedRole,
             teamname,
           })
@@ -173,7 +174,7 @@ const TeamInviteByContact = (props: OwnProps) => {
         dispatch(
           TeamsGen.createInviteToTeamByPhone({
             fullName: contact.name,
-            loadingKey: contact.value,
+            loadingKey,
             phoneNumber: contact.valueFormatted || contact.value,
             role: selectedRole,
             teamname,
@@ -192,7 +193,6 @@ const TeamInviteByContact = (props: OwnProps) => {
         TeamsGen.createRemoveMemberOrPendingInvite({
           email: '',
           inviteID,
-          loadingKey: inviteID,
           teamname,
           username: '',
         })
@@ -210,10 +210,13 @@ const TeamInviteByContact = (props: OwnProps) => {
     const id = [contact.type, contact.value, contact.name].join('+')
     const inviteID = teamAlreadyInvited.get(contact.value)
 
-    // `loadingKey` is inviteID when invite already (so loading is canceling the
-    // invite), or contact.value when loading is adding an invite.
-    const loadingKey = inviteID || contact.value
-    const loading = loadingInvites.get(loadingKey, false)
+    // `waitingKey` is inviteID when invite already exists (so we might be
+    // waiting for its cancelation), or contact.value when we may be waiting
+    // while it's being added.
+    const waitingKey = inviteID
+      ? Constants.removeMemberWaitingKey(teamname, inviteID)
+      : Constants.addInviteWaitingKey(teamname, contact.value)
+    const loading = Boolean(allWaiting.get(waitingKey))
 
     const onClick = inviteID ? () => onCancelInvite(inviteID) : () => onInviteContact(contact)
 
