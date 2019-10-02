@@ -1,4 +1,5 @@
-import releasesJSON from './releases-gen.json'
+import React from 'react'
+import releasesJSON from './releases-gen'
 import WhatsNew from '.'
 
 /*
@@ -11,6 +12,7 @@ import WhatsNew from '.'
  *
  */
 
-const Container = () => null
+const onNavigate = () => null
+const Container = () => <WhatsNew onNavigate={onNavigate} releases={releasesJSON} />
 
 export default Container

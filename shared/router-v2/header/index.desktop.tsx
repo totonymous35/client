@@ -78,20 +78,38 @@ export const SystemButtons = () => (
 // Render the radio icon in the header and coordinate rendering the popup component when clicked
 const WhatsNewFloating = () => {
   const [popupVisible, setPopupVisible] = React.useState(false)
-  const iconRef = React.createRef<Kb.Icon>()
+  const [iconRef, setIconRef] = React.useState(null)
+  const iconRefCallback = React.useCallback(node => {
+    if (node !== null) {
+      setIconRef(node)
+    }
+  }, [])
 
   return (
     <>
       <WhatsNewIcon
         newFeatures={false}
-        ref={iconRef}
-        onClick={(ref: Kb.Icon | null) =>
-          popupVisible ? setPopupVisible(false) : !!ref && setPopupVisible(true)
-        }
+        ref={iconRefCallback}
+        onClick={() => {
+          console.log('Icon clicked', {iconRef})
+          if (popupVisible) {
+            setPopupVisible(false)
+          } else {
+            console.log('icon clicked - popup not visible, checking if we have iconRef', {iconRef})
+            if (iconRef) {
+              console.log('icon clicked - seting popup to visible')
+              setPopupVisible(true)
+            }
+          }
+          popupVisible ? setPopupVisible(false) : !!iconRef && setPopupVisible(true)
+        }}
       />
       {popupVisible && (
         <WhatsNewPopup
-          attachTo={() => iconRef.current}
+          attachTo={() => {
+            console.log('WhatsNewPopup attachTo', {iconRef})
+            return iconRef
+          }}
           position="bottom center"
           onHidden={() => setPopupVisible(false)}
         />

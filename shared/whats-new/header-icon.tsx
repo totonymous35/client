@@ -4,7 +4,7 @@ import * as Styles from '../styles'
 
 type Props = {
   newFeatures: boolean
-  onClick: (ref: Kb.Icon | null) => void
+  onClick: () => void
 }
 
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
@@ -19,10 +19,16 @@ const HeaderIcon = React.forwardRef<Kb.Icon, Props>((props, ref) => {
   return props.newFeatures ? (
     <>
       <Kb.DesktopStyle style={realCSS} />
-      <Kb.Icon type="iconfont-radio" style={styles.rainbowColor} className="rainbowGradient" ref={ref} />
+      <Kb.Icon
+        type="iconfont-radio"
+        style={styles.rainbowColor}
+        className="rainbowGradient"
+        ref={ref}
+        onClick={props.onClick}
+      />
     </>
   ) : (
-    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} ref={ref} />
+    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} ref={ref} onClick={props.onClick} />
   )
 })
 
