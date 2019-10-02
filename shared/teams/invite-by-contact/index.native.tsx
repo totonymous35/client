@@ -76,8 +76,6 @@ const contactRow = (_: number, props: ContactRowProps) => {
 
 export type InviteByContactProps = {
   onBack: () => void
-  filter: string
-  onSetFilter: (newFilter: string) => void
   selectedRole: TeamRoleType
   onRoleChange: (newRole: TeamRoleType) => void
   teamName: string
@@ -93,6 +91,30 @@ export const InviteByContact = (props: InviteByContactProps) => {
     },
     [setRolePickerOpen]
   )
+
+  const [filterValue, setFilterValue] = React.useState('')
+  const onFilterChange = React.useCallback(
+    (newValue: string) => {
+      setFilterValue(newValue)
+    },
+    [setFilterValue]
+  )
+
+  let {listItems} = props
+  // Remember if we have any data before appying filtering.
+  const hasItems = listItems.length > 0
+  if (filterValue) {
+    listItems = listItems.filter(row =>
+      [row.name, row.value, row.valueFormatted].some(
+        s =>
+          s &&
+          s
+            .replace(/^[^a-z0-9@._+()]/i, '')
+            .toLowerCase()
+            .includes(filterValue.toLowerCase())
+      )
+    )
+  }
 
   return (
     <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
@@ -113,7 +135,7 @@ export const InviteByContact = (props: InviteByContactProps) => {
           </Kb.Text>
         </Kb.Box2>
       )}
-      {props.listItems.length > 0 && (
+      {hasItems && (
         <Kb.Box
           style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
         >
@@ -126,8 +148,8 @@ export const InviteByContact = (props: InviteByContactProps) => {
           >
             <Kb.Input
               keyboardType="email-address"
-              value={props.filter}
-              onChangeText={props.onSetFilter}
+              value={filterValue}
+              onChangeText={onFilterChange}
               hintText="Search"
               hideUnderline={true}
               small={true}
@@ -151,7 +173,7 @@ export const InviteByContact = (props: InviteByContactProps) => {
           />
           <Kb.List
             keyProperty="id"
-            items={props.listItems}
+            items={listItems}
             fixedHeight={56}
             ListHeaderComponent={
               <Kb.ClickableBox

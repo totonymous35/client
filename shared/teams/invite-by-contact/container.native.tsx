@@ -10,7 +10,7 @@ import {NativeModules} from 'react-native'
 import {TeamRoleType} from '../../constants/types/teams'
 import logger from '../../logger'
 
-import {ContactProps, ContactRowProps, InviteByContact} from '.'
+import {ContactProps, ContactRowProps, InviteByContact} from './index.native'
 
 type OwnProps = Container.RouteProps<{teamname: string}>
 
@@ -113,7 +113,6 @@ const TeamInviteByContact = (props: OwnProps) => {
   const [region, setRegion] = React.useState('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [selectedRole, setSelectedRole] = React.useState('writer' as TeamRoleType)
-  const [filter, setFilter] = React.useState('')
 
   const permStatus = Container.useSelector(s => s.settings.contacts.permissionStatus)
   const teamInvites = Container.useSelector(s => Constants.getTeamInvites(s, teamname))
@@ -202,13 +201,6 @@ const TeamInviteByContact = (props: OwnProps) => {
     [dispatch, teamname]
   )
 
-  const onSetFilter = React.useCallback(
-    (s: string) => {
-      setFilter(s)
-    },
-    [setFilter]
-  )
-
   // ----
 
   const teamAlreadyInvited = mapExistingInvitesToValues(teamInvites, region)
@@ -234,27 +226,12 @@ const TeamInviteByContact = (props: OwnProps) => {
     }
   })
 
-  if (filter) {
-    listItems = listItems.filter(row =>
-      [row.name, row.value, row.valueFormatted].some(
-        s =>
-          s &&
-          s
-            .replace(/^[^a-z0-9@._+()]/i, '')
-            .toLowerCase()
-            .includes(filter)
-      )
-    )
-  }
-
   return (
     <InviteByContact
       errorMessage={errorMessage}
-      filter={filter}
       listItems={listItems}
       onBack={onBack}
       onRoleChange={onRoleChange}
-      onSetFilter={onSetFilter}
       selectedRole={selectedRole}
       teamName={teamname}
     />
