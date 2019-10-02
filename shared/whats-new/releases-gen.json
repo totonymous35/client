@@ -1,0 +1,47 @@
+{
+  "current": {
+    "version": "4.4.0",
+    "features": [
+      {
+        "text": "",
+        "primaryButton": null,
+        "secondaryButton": null,
+        "image": "../images/something.png"
+      },
+      {
+        "text": "",
+        "primaryButton": {
+          "text": "",
+          "path": "/chat/new",
+          "external": false
+        },
+        "secondaryButton": null,
+        "image": "../images/new-stuff.png"
+      },
+      {
+        "text": "",
+        "primaryButton": {
+          "text": "",
+          "path": "/chat/new",
+          "external": false
+        },
+        "secondaryButton": {
+          "text": "",
+          "path": "/chat/new",
+          "external": false
+        },
+        "image": "../images/new-stuff.png"
+      }
+    ]
+  },
+  "last": [
+    "version": "4.3.0",
+    "features": [
+    ]
+  ],
+  "last-last": [
+    "version": "4.2.0",
+    "features": [
+    ]
+  ]
+}

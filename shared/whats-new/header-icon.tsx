@@ -4,7 +4,7 @@ import * as Styles from '../styles'
 
 type Props = {
   newFeatures: boolean
-  onClick?: ((event: React.BaseSyntheticEvent) => void) | null
+  onClick: (ref: Kb.Icon | null) => void
 }
 
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
@@ -14,22 +14,17 @@ const realCSS = `
   }
 `
 
-const HeaderIcon = (props: Props) =>
-  props.newFeatures ? (
-    Styles.isMobile ? null : (
-      <>
-        <Kb.DesktopStyle style={realCSS} />
-        <Kb.Icon
-          type="iconfont-radio"
-          style={styles.rainbowColor}
-          className="rainbowGradient"
-          onClick={props.onClick}
-        />
-      </>
-    )
+// Forward the ref of the icon so we can attach the FloatingBox on desktop to this component
+const HeaderIcon = React.forwardRef<Kb.Icon, Props>((props, ref) => {
+  return props.newFeatures ? (
+    <>
+      <Kb.DesktopStyle style={realCSS} />
+      <Kb.Icon type="iconfont-radio" style={styles.rainbowColor} className="rainbowGradient" ref={ref} />
+    </>
   ) : (
-    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} onClick={props.onClick} />
+    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} ref={ref} />
   )
+})
 
 const styles = Styles.styleSheetCreate(() => ({
   rainbowColor: Styles.platformStyles({

@@ -5,7 +5,7 @@ import * as Styles from '../styles'
 type Props = {
   text: string
   seen: boolean
-  imageSrc?: string
+  imageSrc?: string | null
   primaryButton: boolean
   primaryButtonText?: string
   primaryButtonPath?: string
@@ -14,7 +14,14 @@ type Props = {
   secondaryButtonText?: string
   secondaryButtonPath?: string
   secondaryButtonExternal?: boolean
+  onNavigate: (path: string, external: boolean) => null
 }
+
+const makeOnClickHandler = (
+  path: string,
+  external: boolean,
+  onNavigate: (p: string, e: boolean) => null
+) => () => onNavigate(path, external)
 
 const NewFeature = (props: Props) => {
   return (
@@ -29,17 +36,38 @@ const NewFeature = (props: Props) => {
           {props.imageSrc && <Kb.Image src={props.imageSrc} style={styles.image} />}
         </Kb.Box2>
         <Kb.Box2 direction="horizontal" style={styles.buttonRowContainer} gap="tiny">
-          {props.primaryButton && (
-            <Kb.Button type="Default" mode="Primary" label={props.primaryButtonText} style={styles.buttons} />
-          )}
-          {props.secondaryButton && (
-            <Kb.Button
-              type="Default"
-              mode="Secondary"
-              label={props.secondaryButtonText}
-              style={styles.buttons}
-            />
-          )}
+          {props.primaryButton &&
+            props.primaryButtonText &&
+            props.primaryButtonPath &&
+            props.primaryButtonExternal !== undefined && (
+              <Kb.Button
+                type="Default"
+                mode="Primary"
+                label={props.primaryButtonText}
+                onClick={makeOnClickHandler(
+                  props.primaryButtonPath,
+                  props.primaryButtonExternal,
+                  props.onNavigate
+                )}
+                style={styles.buttons}
+              />
+            )}
+          {props.secondaryButton &&
+            props.secondaryButtonText &&
+            props.secondaryButtonPath &&
+            props.secondaryButtonExternal !== undefined && (
+              <Kb.Button
+                type="Default"
+                mode="Secondary"
+                label={props.secondaryButtonText}
+                onClick={makeOnClickHandler(
+                  props.secondaryButtonPath,
+                  props.secondaryButtonExternal,
+                  props.onNavigate
+                )}
+                style={styles.buttons}
+              />
+            )}
         </Kb.Box2>
       </Kb.Box2>
     </Kb.Box2>

@@ -9,6 +9,7 @@ import {BrowserWindow} from '../../util/safe-electron.desktop'
 import AirdropBanner from '../../wallets/airdrop/banner/container'
 import SyncingFolders from './syncing-folders'
 import WhatsNewIcon from '../../whats-new/header-icon'
+import WhatsNewPopup from '../../whats-new/popup.desktop'
 import flags from '../../util/feature-flags'
 import * as ReactIs from 'react-is'
 
@@ -73,6 +74,31 @@ export const SystemButtons = () => (
     </Kb.ClickableBox>
   </Kb.Box2>
 )
+
+// Render the radio icon in the header and coordinate rendering the popup component when clicked
+const WhatsNewFloating = () => {
+  const [popupVisible, setPopupVisible] = React.useState(false)
+  const iconRef = React.createRef<Kb.Icon>()
+
+  return (
+    <>
+      <WhatsNewIcon
+        newFeatures={false}
+        ref={iconRef}
+        onClick={(ref: Kb.Icon | null) =>
+          popupVisible ? setPopupVisible(false) : !!ref && setPopupVisible(true)
+        }
+      />
+      {popupVisible && (
+        <WhatsNewPopup
+          attachTo={() => iconRef.current}
+          position="bottom center"
+          onHidden={() => setPopupVisible(false)}
+        />
+      )}
+    </>
+  )
+}
 
 class Header extends React.PureComponent<Props> {
   componentDidMount() {
@@ -220,7 +246,7 @@ class Header extends React.PureComponent<Props> {
                   style={styles.iconContainer}
                   className={Styles.classNames('hover_container', 'hover_background_color_black_10')}
                 >
-                  <WhatsNewIcon newFeatures={true} />
+                  <WhatsNewFloating />
                 </Kb.Box>
               )}
               {!title && rightActions}

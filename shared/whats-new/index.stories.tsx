@@ -3,7 +3,8 @@ import * as Sb from '../stories/storybook'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
 import HeaderIcon from './header-icon'
-import NewFeature from './new-feature'
+import NewFeatureRow from './new-feature-row'
+import WhatsNew from '.'
 
 const commonNewFeatureProps = {
   primaryButton: false,
@@ -41,7 +42,53 @@ const newFeatures = [
   },
 ]
 
-const NewFeatureWrapper = ({children}) => (
+const releases = {
+  current: {
+    features: [
+      {
+        image: '',
+        primaryButton: {
+          external: false,
+          path: 'there',
+          text: 'Feature',
+        },
+        secondaryButton: {
+          external: true,
+          path: 'https://keybase.io',
+          text: 'Docs',
+        },
+        text: 'hi this is new',
+      },
+    ],
+    version: '4.4',
+  },
+  last: {
+    features: [
+      {
+        image: '',
+        primaryButton: {
+          external: false,
+          path: 'there',
+          text: 'Go there',
+        },
+        secondaryButton: {
+          external: false,
+          path: '/',
+          text: 'Go back',
+        },
+        seen: true,
+        text: 'hi this is new',
+      },
+    ],
+    version: '4.3.0',
+  },
+  lastLast: {
+    features: [],
+    version: '4.1.0',
+  },
+}
+
+const NewFeatureRowWrapper = ({children}) => (
   <Kb.Box2 direction="vertical" alignItems="flex-start" style={styles.newFeatureContainer}>
     {children}
   </Kb.Box2>
@@ -50,16 +97,24 @@ const NewFeatureWrapper = ({children}) => (
 const load = () => {
   Sb.storiesOf('Whats New', module)
     .addDecorator(Sb.scrollViewDecorator)
-    .add('Radio Icon - Nothing New', () => <HeaderIcon newFeatures={false} />)
-    .add('Radio Icon - New Features', () => <HeaderIcon newFeatures={true} />)
-    .add('New Feature Row', () =>
-      newFeatures.map((feature, index) => (
-        <NewFeatureWrapper key={index}>
-          <NewFeature {...feature} />
-        </NewFeatureWrapper>
+    .add('Radio Icon - Nothing New', () => <HeaderIcon newFeatures={false} onClick={Sb.action('onClick')} />)
+    .add('Radio Icon - New Features', () => <HeaderIcon newFeatures={true} onClick={Sb.action('onClick')} />)
+    .add('New Feature Row', () => {
+      const unseen = newFeatures.map((feature, index) => (
+        <NewFeatureRowWrapper key={index}>
+          <NewFeatureRow onNavigate={Sb.action('onNavigate')} {...feature} />
+        </NewFeatureRowWrapper>
       ))
-    )
-    .add('Popup', () => null)
+
+      const seen = newFeatures.map((feature, index) => (
+        <NewFeatureRowWrapper key={index}>
+          <NewFeatureRow onNavigate={Sb.action('onNavigate')} {...feature} seen={true} />
+        </NewFeatureRowWrapper>
+      ))
+
+      return [...unseen, ...seen]
+    })
+    .add('Whats New List', () => <WhatsNew releases={releases} onNavigate={Sb.action('onNavigate')} />)
 }
 
 const modalWidth = 284
