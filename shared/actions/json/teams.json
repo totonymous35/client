@@ -50,7 +50,8 @@
     },
     "getTeams": {},
     "getDetails": {
-      "teamname": "string"
+      "teamname": "string",
+      "clearInviteLoadingKey?": "string"
     },
     "getMembers": {
       "teamname": "string"

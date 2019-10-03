@@ -144,7 +144,7 @@ type _GetChannelInfoPayload = {
 }
 type _GetChannelsPayload = {readonly teamname: string}
 type _GetDetailsForAllTeamsPayload = void
-type _GetDetailsPayload = {readonly teamname: string}
+type _GetDetailsPayload = {readonly teamname: string; readonly clearInviteLoadingKey?: string}
 type _GetMembersPayload = {readonly teamname: string}
 type _GetTeamOperationsPayload = {readonly teamname: string}
 type _GetTeamProfileAddListPayload = {readonly username: string}

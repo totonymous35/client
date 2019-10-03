@@ -251,13 +251,10 @@ function* inviteByEmail(_: TypedState, action: TeamsGen.InviteToTeamByEmailPaylo
         yield Saga.put(RouteTreeGen.createClearModals())
       }
     }
-    if (loadingKey) {
-      yield Saga.put(TeamsGen.createGetDetails({teamname}))
-    }
+    yield Saga.put(TeamsGen.createGetDetails({clearInviteLoadingKey: loadingKey, teamname}))
   } catch (err) {
     // other error. display messages and leave all emails in input box
     yield Saga.put(TeamsGen.createSetEmailInviteError({malformed: [], message: err.desc}))
-  } finally {
     if (loadingKey) {
       yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
     }
@@ -399,11 +396,10 @@ function* removeMemberOrPendingInvite(
       ]
     )
     if (loadingKey) {
-      yield Saga.put(TeamsGen.createGetDetails({teamname}))
+      yield Saga.put(TeamsGen.createGetDetails({clearInviteLoadingKey: loadingKey, teamname}))
     }
   } catch (err) {
     logger.error('Failed to remove member or pending invite', err)
-  } finally {
     if (loadingKey) {
       yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
     }
@@ -446,14 +442,13 @@ function* inviteToTeamByPhone(
     /* Open SMS */
     const bodyText = generateSMSBody(teamname, seitan)
     yield openSMS([phoneNumber], bodyText)
-    return TeamsGen.createGetDetails({teamname})
+    return TeamsGen.createGetDetails({clearInviteLoadingKey: loadingKey, teamname})
   } catch (err) {
     logger.info('Error sending SMS', err)
-    return false
-  } finally {
     if (loadingKey) {
       yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
     }
+    return false
   }
 }
 
@@ -617,6 +612,11 @@ function* getDetails(_: TypedState, action: TeamsGen.GetDetailsPayload, logger: 
     )
   } catch (e) {
     logger.error(e)
+  } finally {
+    const loadingKey = action.payload.clearInviteLoadingKey
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
+    }
   }
 }
 
