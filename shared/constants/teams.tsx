@@ -39,8 +39,6 @@ export const addInviteWaitingKey = (teamname: Types.Teamname, value: string) =>
   `teamAddInvite:${teamname};${value}`
 // also for pending invites, hence id rather than username
 export const removeMemberWaitingKey = (teamname: Types.Teamname, id: string) => `teamRemove:${teamname};${id}`
-export const removeInviteIDWaitingKey = (teamname: Types.Teamname, id: string) =>
-  `teamRemoveInviteID:${teamname};${id}`
 export const addToTeamSearchKey = 'addToTeamSearch'
 export const teamProfileAddListWaitingKey = 'teamProfileAddList'
 export const deleteTeamWaitingKey = (teamname: Types.Teamname) => `teamDelete:${teamname}`

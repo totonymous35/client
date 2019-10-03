@@ -212,12 +212,10 @@ const updateTeamRetentionPolicy = (
 
 function* inviteByEmail(_: TypedState, action: TeamsGen.InviteToTeamByEmailPayload, logger: Saga.SagaLogger) {
   const {invitees, role, teamname, loadingKey} = action.payload
+  if (loadingKey) {
+    yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: true, loadingKey, teamname}))
+  }
   try {
-    const waitingKeys = [Constants.teamWaitingKey(teamname), Constants.addToTeamByEmailWaitingKey(teamname)]
-    if (loadingKey) {
-      // Caller wants us to use custom waiting key.
-      waitingKeys.push(loadingKey)
-    }
     const res: Saga.RPCPromiseType<
       typeof RPCTypes.teamsTeamAddEmailsBulkRpcPromise
     > = yield RPCTypes.teamsTeamAddEmailsBulkRpcPromise(
@@ -226,7 +224,7 @@ function* inviteByEmail(_: TypedState, action: TeamsGen.InviteToTeamByEmailPaylo
         name: teamname,
         role: (role ? RPCTypes.TeamRole[role] : RPCTypes.TeamRole.none) as any,
       },
-      waitingKeys
+      [Constants.teamWaitingKey(teamname), Constants.addToTeamByEmailWaitingKey(teamname)]
     )
     if (res.malformed && res.malformed.length > 0) {
       const malformed = res.malformed
@@ -253,9 +251,16 @@ function* inviteByEmail(_: TypedState, action: TeamsGen.InviteToTeamByEmailPaylo
         yield Saga.put(RouteTreeGen.createClearModals())
       }
     }
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createGetDetails({teamname}))
+    }
   } catch (err) {
     // other error. display messages and leave all emails in input box
     yield Saga.put(TeamsGen.createSetEmailInviteError({malformed: [], message: err.desc}))
+  } finally {
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
+    }
   }
 }
 
@@ -367,8 +372,10 @@ function* removeMemberOrPendingInvite(
   action: TeamsGen.RemoveMemberOrPendingInvitePayload,
   logger: Saga.SagaLogger
 ) {
-  const {teamname, username, email, inviteID} = action.payload
-
+  const {teamname, username, email, inviteID, loadingKey} = action.payload
+  if (loadingKey) {
+    yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: true, loadingKey, teamname}))
+  }
   // Disallow call with any pair of username, email, and ID to avoid black-bar
   // errors.
   if ((!!username && !!email) || (!!username && !!inviteID) || (!!email && !!inviteID)) {
@@ -378,16 +385,6 @@ function* removeMemberOrPendingInvite(
   }
 
   try {
-    const waitingKeys = [
-      Constants.teamWaitingKey(teamname),
-      // only one of (username, email, inviteID) is truth-y
-      Constants.removeMemberWaitingKey(teamname, username || email || inviteID),
-    ]
-    if (inviteID) {
-      // Additional waiting key if we are dealing with inviteIDs. May be easier
-      // to find for the caller rather than username / email combination.
-      waitingKeys.push(Constants.removeInviteIDWaitingKey(teamname, inviteID))
-    }
     yield RPCTypes.teamsTeamRemoveMemberRpcPromise(
       {
         email,
@@ -395,10 +392,21 @@ function* removeMemberOrPendingInvite(
         name: teamname,
         username,
       },
-      waitingKeys
+      [
+        Constants.teamWaitingKey(teamname),
+        // only one of (username, email, inviteID) is truth-y
+        Constants.removeMemberWaitingKey(teamname, username || email || inviteID),
+      ]
     )
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createGetDetails({teamname}))
+    }
   } catch (err) {
     logger.error('Failed to remove member or pending invite', err)
+  } finally {
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
+    }
   }
 }
 
@@ -421,12 +429,10 @@ function* inviteToTeamByPhone(
   logger: Saga.SagaLogger
 ) {
   const {teamname, role, phoneNumber, fullName = '', loadingKey} = action.payload
+  if (loadingKey) {
+    yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: true, loadingKey, teamname}))
+  }
   try {
-    const waitingKeys = [Constants.teamWaitingKey(teamname)]
-    if (loadingKey) {
-      // Caller wants us to use custom waiting key.
-      waitingKeys.push(loadingKey)
-    }
     const seitan: Saga.RPCPromiseType<
       typeof RPCTypes.teamsTeamCreateSeitanTokenV2RpcPromise
     > = yield RPCTypes.teamsTeamCreateSeitanTokenV2RpcPromise(
@@ -435,7 +441,7 @@ function* inviteToTeamByPhone(
         name: teamname,
         role: (!!role && RPCTypes.TeamRole[role]) || RPCTypes.TeamRole.none,
       },
-      waitingKeys
+      [Constants.teamWaitingKey(teamname)]
     )
     /* Open SMS */
     const bodyText = generateSMSBody(teamname, seitan)
@@ -444,6 +450,10 @@ function* inviteToTeamByPhone(
   } catch (err) {
     logger.info('Error sending SMS', err)
     return false
+  } finally {
+    if (loadingKey) {
+      yield Saga.put(TeamsGen.createSetTeamLoadingInvites({isLoading: false, loadingKey, teamname}))
+    }
   }
 }
 
