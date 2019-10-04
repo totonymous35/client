@@ -417,7 +417,7 @@ const setOpenAtLogin = async (state: Container.TypedState) => {
 }
 
 const setNixOnLoginStartup = async (enabled: boolean) => {
-  RPCTypes.ctlSetNixOnLoginStartupRpcPromise(enabled).catch(err => {
+  RPCTypes.ctlSetNixOnLoginStartupRpcPromise({enabled}).catch(err => {
     console.info(`Error in sending ctlSetNixOnLoginStartup: ${err.message}`)
   })
 }
