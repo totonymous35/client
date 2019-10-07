@@ -5,7 +5,7 @@ import {CurrentRelease, LastRelease, LastLastRelease} from './releases'
 
 const WhatsNew = () => {
   return (
-    <Kb.ScrollView style={{height: '100%', width: '100%'}} showsVerticalScrollIndicator={true}>
+    <Kb.ScrollView style={styles.scrollView}>
       <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" style={styles.container}>
         <Kb.Box2
           direction="vertical"
@@ -25,18 +25,30 @@ const WhatsNew = () => {
 const modalWidth = 284
 const modalHeight = 424
 const styles = Styles.styleSheetCreate(() => ({
-  container: {
-    ...Styles.globalStyles.rounded,
-    maxHeight: modalHeight,
-    maxWidth: modalWidth,
-  },
+  container: Styles.platformStyles({
+    isElectron: {
+      height: modalHeight,
+      maxHeight: modalHeight,
+      maxWidth: modalWidth,
+      width: modalWidth,
+    },
+  }),
   contentBackground: {
     backgroundColor: Styles.globalColors.blueGrey,
     paddingBottom: Styles.globalMargins.tiny,
     paddingLeft: Styles.globalMargins.tiny,
     paddingRight: Styles.globalMargins.tiny,
     paddingTop: Styles.globalMargins.tiny,
+    width: '100%',
   },
+  scrollView: Styles.platformStyles({
+    common: {
+      width: '100%',
+    },
+    isElectron: {
+      ...Styles.globalStyles.rounded,
+    },
+  }),
   versionTitle: {
     color: Styles.globalColors.black_50,
     marginBottom: Styles.globalMargins.tiny,

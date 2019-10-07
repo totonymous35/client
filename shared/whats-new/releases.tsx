@@ -1,9 +1,7 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-{
-  /* import NewFeatureRow from './new-feature-row' */
-}
+import NewFeatureRow from './new-feature-row'
 //import openURL from '../util/open-url'
 
 /*
@@ -33,13 +31,34 @@ const ReleaseTitle = ({title}: {title: string}) => (
 )
 
 export const CurrentRelease = () => {
-  return <Kb.Box2 direction="vertical" alignItems="flex-start" fullWidth={true} />
+  return (
+    <Kb.Box2 direction="vertical" alignItems="flex-start" fullWidth={true}>
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+    </Kb.Box2>
+  )
 }
 
 export const LastRelease = () => {
   return (
     <Kb.Box2 direction="vertical" alignItems="flex-start" fullWidth={true}>
       <ReleaseTitle title="Last" />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
     </Kb.Box2>
   )
 }
@@ -48,6 +67,15 @@ export const LastLastRelease = () => {
   return (
     <Kb.Box2 direction="vertical" alignItems="flex-start" fullWidth={true}>
       <ReleaseTitle title="Last Last" />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={false} />
     </Kb.Box2>
   )
 }

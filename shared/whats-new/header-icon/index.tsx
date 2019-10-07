@@ -45,27 +45,12 @@ export const HeaderIconWithPopup = (props: PropsWithPopup) => {
       <HeaderIcon
         newFeatures={false}
         onClick={() => {
-          // console.log('JRY: icon clicked', {attachToRef})
-          // if (popupVisible) {
-          //   setPopupVisible(false)
-          // } else {
-          //   console.log('JRY: icon clicked - popup not visible, checking if we have iconattachToRef', {
-          //     attachToRef,
-          //   })
-          //   if (attachToRef) {
-          //     console.log('JRY: icon clicked - seting popup to visible')
-          //     setPopupVisible(true)
-          //   }
-          // }
           popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
         }}
       />
       {!Styles.isMobile && popupVisible && (
         <Popup
-          attachTo={() => {
-            console.log('JRY WhatsNewPopup attachTo', {attachToRef})
-            return attachToRef.current
-          }}
+          attachTo={() => attachToRef.current}
           position="bottom right"
           positionFallbacks={['bottom right', 'bottom center']}
           onHidden={() => setPopupVisible(false)}

@@ -7,8 +7,8 @@ type Props = {
   text: string
   seen: boolean
   imageSrc?: string | null
-  primaryButton: ActionButton | null
-  secondaryButton: ActionButton | null
+  primaryButton?: ActionButton | null
+  secondaryButton?: ActionButton | null
 }
 
 const NewFeature = (props: Props) => {

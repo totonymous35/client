@@ -38,6 +38,7 @@ const Popup = (props: Props) => {
 
 const styles = Styles.styleSheetCreate(() => ({
   container: {
+    ...Styles.globalStyles.rounded,
     marginRight: Styles.globalMargins.tiny,
   },
 }))
