@@ -76,41 +76,38 @@ export const SystemButtons = () => (
 )
 
 // Render the radio icon in the header and coordinate rendering the popup component when clicked
-const WhatsNewFloating = () => {
+const WhatsNewFloating = (props: {containerRef: React.RefObject<Kb.Box2>}) => {
+  const {containerRef} = props
   const [popupVisible, setPopupVisible] = React.useState(false)
-  const [iconRef, setIconRef] = React.useState(null)
-  const iconRefCallback = React.useCallback(node => {
-    if (node !== null) {
-      setIconRef(node)
-    }
-  }, [])
 
   return (
     <>
       <WhatsNewIcon
         newFeatures={false}
-        ref={iconRefCallback}
         onClick={() => {
-          console.log('Icon clicked', {iconRef})
+          console.log('Icon clicked', {containerRef})
           if (popupVisible) {
             setPopupVisible(false)
           } else {
-            console.log('icon clicked - popup not visible, checking if we have iconRef', {iconRef})
-            if (iconRef) {
+            console.log('icon clicked - popup not visible, checking if we have iconcontainerRef', {
+              containerRef,
+            })
+            if (containerRef) {
               console.log('icon clicked - seting popup to visible')
               setPopupVisible(true)
             }
           }
-          popupVisible ? setPopupVisible(false) : !!iconRef && setPopupVisible(true)
+          popupVisible ? setPopupVisible(false) : !!containerRef && setPopupVisible(true)
         }}
       />
       {popupVisible && (
         <WhatsNewPopup
           attachTo={() => {
-            console.log('WhatsNewPopup attachTo', {iconRef})
-            return iconRef
+            console.log('WhatsNewPopup attachTo', {containerRef})
+            return containerRef.current
           }}
-          position="bottom center"
+          position="bottom right"
+          positionFallbacks={['bottom right', 'bottom center']}
           onHidden={() => setPopupVisible(false)}
         />
       )}
@@ -208,6 +205,8 @@ class Header extends React.PureComponent<Props> {
         ? Styles.globalColors.black_10
         : Styles.globalColors.transparent)
 
+    const whatsNewFloatingRef = React.createRef<Kb.Box2>()
+
     return (
       <Kb.Box2 noShrink={true} direction="vertical" fullWidth={true}>
         <Kb.Box2
@@ -230,6 +229,7 @@ class Header extends React.PureComponent<Props> {
             fullWidth={true}
             style={styles.headerBack}
             alignItems="center"
+            ref={whatsNewFloatingRef}
           >
             {/* TODO have headerLeft be the back button */}
             {opt.headerLeft !== null && (
@@ -264,7 +264,7 @@ class Header extends React.PureComponent<Props> {
                   style={styles.iconContainer}
                   className={Styles.classNames('hover_container', 'hover_background_color_black_10')}
                 >
-                  <WhatsNewFloating />
+                  <WhatsNewFloating containerRef={whatsNewFloatingRef} />
                 </Kb.Box>
               )}
               {!title && rightActions}

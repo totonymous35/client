@@ -15,7 +15,7 @@ const realCSS = `
 `
 
 // Forward the ref of the icon so we can attach the FloatingBox on desktop to this component
-const HeaderIcon = React.forwardRef<Kb.Icon, Props>((props, ref) => {
+const HeaderIcon = (props: Props) => {
   return props.newFeatures ? (
     <>
       <Kb.DesktopStyle style={realCSS} />
@@ -23,14 +23,13 @@ const HeaderIcon = React.forwardRef<Kb.Icon, Props>((props, ref) => {
         type="iconfont-radio"
         style={styles.rainbowColor}
         className="rainbowGradient"
-        ref={ref}
         onClick={props.onClick}
       />
     </>
   ) : (
-    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} ref={ref} onClick={props.onClick} />
+    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} onClick={props.onClick} />
   )
-})
+}
 
 const styles = Styles.styleSheetCreate(() => ({
   rainbowColor: Styles.platformStyles({

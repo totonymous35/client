@@ -57,22 +57,34 @@ const Release = ({isCurrent, title, release, onNavigate}) => (
 const WhatsNew = (props: Props) => {
   const releaseKeys = Object.keys(props.releases)
   return (
-    <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" style={styles.container}>
-      {releaseKeys.map(key => {
-        const release: ReleaseType = props.releases[key]
-        const isCurrent = key === 'current'
-        const title = capitalize(key)
-        return (
-          <Release
-            key={release.version}
-            isCurrent={isCurrent}
-            title={title}
-            release={release}
-            onNavigate={props.onNavigate}
-          />
-        )
-      })}
-    </Kb.Box2>
+    <Kb.ScrollView style={{height: '100%', width: '100%'}} showsVerticalScrollIndicator={true}>
+      <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" style={styles.container}>
+        <Kb.Box2
+          direction="vertical"
+          alignItems="flex-start"
+          alignSelf="flex-start"
+          style={styles.contentBackground}
+        >
+          {releaseKeys.map(key => {
+            const release: ReleaseType = props.releases[key]
+            if (!release) {
+              return null
+            }
+            const isCurrent = key === 'current'
+            const title = capitalize(key)
+            return (
+              <Release
+                key={release.version}
+                isCurrent={isCurrent}
+                title={title}
+                release={release}
+                onNavigate={props.onNavigate}
+              />
+            )
+          })}
+        </Kb.Box2>
+      </Kb.Box2>
+    </Kb.ScrollView>
   )
 }
 
@@ -80,13 +92,16 @@ const modalWidth = 284
 const modalHeight = 424
 const styles = Styles.styleSheetCreate(() => ({
   container: {
-    backgroundColor: Styles.globalColors.blueGrey,
+    ...Styles.globalStyles.rounded,
     maxHeight: modalHeight,
     maxWidth: modalWidth,
-    paddingBottom: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 8,
+  },
+  contentBackground: {
+    backgroundColor: Styles.globalColors.blueGrey,
+    paddingBottom: Styles.globalMargins.tiny,
+    paddingLeft: Styles.globalMargins.tiny,
+    paddingRight: Styles.globalMargins.tiny,
+    paddingTop: Styles.globalMargins.tiny,
   },
   versionTitle: {
     color: Styles.globalColors.black_50,

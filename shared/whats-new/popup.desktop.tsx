@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
+import * as Styles from '../styles'
 import WhatsNew from './container'
 import {Position} from '../common-adapters/relative-popup-hoc.types'
 // import * as Styles from '../styles'
@@ -15,17 +16,30 @@ import {Position} from '../common-adapters/relative-popup-hoc.types'
  */
 
 type Props = {
-  attachTo: () => Kb.Icon | null
+  attachTo: () => Kb.Box2 | null
   onHidden: () => void
   position: Position
+  positionFallbacks?: Position[]
 }
 
 const Popup = (props: Props) => {
   return (
-    <Kb.FloatingBox attachTo={props.attachTo} position={props.position} onHidden={props.onHidden}>
+    <Kb.FloatingBox
+      position={props.position}
+      positionFallbacks={props.positionFallbacks}
+      containerStyle={styles.container}
+      onHidden={props.onHidden}
+      attachTo={props.attachTo}
+    >
       <WhatsNew />
     </Kb.FloatingBox>
   )
 }
+
+const styles = Styles.styleSheetCreate(() => ({
+  container: {
+    marginRight: Styles.globalMargins.tiny,
+  },
+}))
 
 export default Popup

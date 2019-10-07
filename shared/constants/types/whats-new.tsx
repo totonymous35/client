@@ -18,4 +18,4 @@ export type Features = Array<Feature>
 export type Release = {
   version: string
   features: Features
-}
+} | null

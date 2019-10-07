@@ -21,6 +21,62 @@ const releases = {
           path: '/',
         },
       },
+      {
+        text: 'Testing new features',
+        image: null,
+        primaryButton: {
+          text: 'Go there',
+          external: false,
+          path: '/',
+        },
+        secondaryButton: {
+          text: 'Go back',
+          external: false,
+          path: '/',
+        },
+      },
+      {
+        text: 'Testing new features',
+        image: null,
+        primaryButton: {
+          text: 'Go there',
+          external: false,
+          path: '/',
+        },
+        secondaryButton: {
+          text: 'Go back',
+          external: false,
+          path: '/',
+        },
+      },
+      {
+        text: 'Testing new features',
+        image: null,
+        primaryButton: {
+          text: 'Go there',
+          external: false,
+          path: '/',
+        },
+        secondaryButton: {
+          text: 'Go back',
+          external: false,
+          path: '/',
+        },
+      },
+      {
+        text: 'Testing new features',
+        image: null,
+        primaryButton: {
+          text: 'Go there',
+          external: false,
+          path: '/',
+        },
+        secondaryButton: {
+          text: 'Go back',
+          external: false,
+          path: '/',
+        },
+      },
     ],
   },
   last: {
@@ -42,9 +98,27 @@ const releases = {
       },
     ],
   },
+  lastLast: null,
+  /*
   lastLast: {
-    features: [],
     version: '4.23.0',
+    features: [
+      {
+        text: 'Testing this stuff out',
+        image: null,
+        primaryButton: {
+          text: 'Go there',
+          external: false,
+          path: '/',
+        },
+        secondaryButton: {
+          text: 'Go back',
+          external: false,
+          path: '/',
+        },
+      },
+    ],
   },
+   */
 }
 export default releases
