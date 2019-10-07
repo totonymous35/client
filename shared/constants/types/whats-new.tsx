@@ -1,7 +1,6 @@
 export type ActionButton = {
   text: string
-  path: string
-  external: boolean
+  onNavigate: () => void
 }
 
 export type Feature = {

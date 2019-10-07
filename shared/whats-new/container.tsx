@@ -1,6 +1,6 @@
 import React from 'react'
-import releasesGen from './releases-gen'
 import WhatsNew from '.'
+import {currentVersion, lastVersion, lastLastVersion} from './releases'
 
 /*
  * TODO Developer Notes
@@ -13,6 +13,8 @@ import WhatsNew from '.'
  */
 
 const onNavigate = () => null
-const Container = () => <WhatsNew onNavigate={onNavigate} releases={releasesGen} />
+const Container = () => {
+  return <WhatsNew onNavigate={onNavigate} />
+}
 
 export default Container

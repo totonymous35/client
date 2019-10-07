@@ -1,29 +1,37 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
+import {ActionButton} from '../constants/types/whats-new'
 
 type Props = {
   text: string
   seen: boolean
   imageSrc?: string | null
-  primaryButton: boolean
-  primaryButtonText?: string
-  primaryButtonPath?: string
-  primaryButtonExternal?: boolean
-  secondaryButton: boolean
-  secondaryButtonText?: string
-  secondaryButtonPath?: string
-  secondaryButtonExternal?: boolean
-  onNavigate: (path: string, external: boolean) => null
+  primaryButton: ActionButton | null
+  secondaryButton: ActionButton | null
 }
 
-const makeOnClickHandler = (
-  path: string,
-  external: boolean,
-  onNavigate: (p: string, e: boolean) => null
-) => () => onNavigate(path, external)
-
 const NewFeature = (props: Props) => {
+  const primaryButton = props.primaryButton ? (
+    <Kb.Button
+      type="Default"
+      mode="Primary"
+      label={props.primaryButton.text}
+      style={styles.buttons}
+      onClick={() => props.primaryButton && props.primaryButton.onNavigate()}
+    />
+  ) : null
+
+  const secondaryButton =
+    props.primaryButton && props.secondaryButton ? (
+      <Kb.Button
+        type="Default"
+        mode="Secondary"
+        label={props.secondaryButton.text}
+        style={styles.buttons}
+        onClick={() => props.secondaryButton && props.secondaryButton.onNavigate()}
+      />
+    ) : null
   return (
     <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.container}>
       {/* Badging */}
@@ -36,38 +44,8 @@ const NewFeature = (props: Props) => {
           {props.imageSrc && <Kb.Image src={props.imageSrc} style={styles.image} />}
         </Kb.Box2>
         <Kb.Box2 direction="horizontal" style={styles.buttonRowContainer} gap="tiny">
-          {props.primaryButton &&
-            props.primaryButtonText &&
-            props.primaryButtonPath &&
-            props.primaryButtonExternal !== undefined && (
-              <Kb.Button
-                type="Default"
-                mode="Primary"
-                label={props.primaryButtonText}
-                onClick={makeOnClickHandler(
-                  props.primaryButtonPath,
-                  props.primaryButtonExternal,
-                  props.onNavigate
-                )}
-                style={styles.buttons}
-              />
-            )}
-          {props.secondaryButton &&
-            props.secondaryButtonText &&
-            props.secondaryButtonPath &&
-            props.secondaryButtonExternal !== undefined && (
-              <Kb.Button
-                type="Default"
-                mode="Secondary"
-                label={props.secondaryButtonText}
-                onClick={makeOnClickHandler(
-                  props.secondaryButtonPath,
-                  props.secondaryButtonExternal,
-                  props.onNavigate
-                )}
-                style={styles.buttons}
-              />
-            )}
+          {primaryButton}
+          {secondaryButton}
         </Kb.Box2>
       </Kb.Box2>
     </Kb.Box2>
