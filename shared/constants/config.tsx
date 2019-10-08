@@ -107,6 +107,7 @@ export const initialState: Types.State = {
   httpSrvAddress: '',
   httpSrvToken: '',
   justDeletedSelf: '',
+  lastSeenVersion: '',
   loggedIn: false,
   logoutHandshakeVersion: 1,
   logoutHandshakeWaiters: new Map(),

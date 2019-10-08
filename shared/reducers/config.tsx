@@ -1,3 +1,4 @@
+import semver from 'semver'
 import logger from '../logger'
 import * as Types from '../constants/types/config'
 import * as Constants from '../constants/config'
@@ -347,6 +348,9 @@ export default (state: Types.State = Constants.initialState, action: Actions): T
         return
       case ConfigGen.setUseNativeFrame:
         draftState.useNativeFrame = action.payload.useNativeFrame
+        return
+      case ConfigGen.setWhatsNewLastSeenVersion:
+        draftState.lastSeenVersion = action.payload.lastSeenVersion
         return
       // Saga only actions
       case ConfigGen.dumpLogs:

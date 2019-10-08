@@ -55,6 +55,7 @@ export type State = {
   httpSrvAddress: string
   httpSrvToken: string
   justDeletedSelf: string
+  lastSeenVersion: string
   loggedIn: boolean
   logoutHandshakeWaiters: Map<string, number>
   logoutHandshakeVersion: number

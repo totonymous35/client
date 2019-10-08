@@ -588,6 +588,28 @@ const saveDarkPrefs = async (state: Container.TypedState) => {
   } catch (_) {}
 }
 
+const gregorPushState = (_: Container.TypedState, action: GregorGen.PushStatePayload) => {
+  const actions: Array<Container.TypedActions> = []
+  const items = action.payload.state
+  const lastSeenItem = items.find(i => i.item && i.item.category === 'whatsNewLastSeenVersion')
+  if (lastSeenItem) {
+    const {body} = lastSeenItem.item
+    const lastVersion = body.toString()
+    logger.info('JRY DEBUG: actions/config/index.tsx | GregorGen.pushState', {
+      body,
+      items,
+      lastSeenItem,
+      lastVersion,
+    })
+    actions.push(
+      ConfigGen.createSetWhatsNewLastSeenVersion({
+        lastSeenVersion: lastVersion,
+      })
+    )
+  }
+  return actions
+}
+
 function* configSaga() {
   // Start the handshake process. This means we tell all sagas we're handshaking with the daemon. If another
   // saga needs to do something before we leave the loading screen they should call daemonHandshakeWait
@@ -654,6 +676,9 @@ function* configSaga() {
   yield* Saga.chainAction2(EngineGen.disconnected, onDisconnected)
   yield* Saga.chainAction2(EngineGen.keybase1NotifyTrackingTrackingInfo, onTrackingInfo)
   yield* Saga.chainAction2(EngineGen.keybase1NotifyServiceHTTPSrvInfoUpdate, onHTTPSrvInfoUpdated)
+
+  // Listen for updated to `whatsNewLastSeenVersion`
+  yield* Saga.chainAction2(GregorGen.pushState, gregorPushState, 'gregorPushState')
 
   yield* Saga.chainAction2(SettingsGen.loadedSettings, maybeLoadAppLink)
 
