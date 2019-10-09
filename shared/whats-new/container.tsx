@@ -1,12 +1,15 @@
 import * as RouteTreeGen from '../actions/route-tree-gen'
 import * as Container from '../util/container'
+import openURL from '../util/open-url'
+import {getSeenVersions} from '../constants/whats-new'
+import {versions} from './versions'
 import WhatsNew from '.'
-// import {currentVersion, lastVersion, lastLastVersion} from './releases'
 
-// TODO @jacob: Need to subscribe to the state of "seen" versions
-// Probably need to make a reducer
-const mapStateToProps = () => ({})
+const mapStateToProps = (state: Container.TypedState) => ({
+  lastSeenVersion: state.config.lastSeenVersion,
+})
 const mapDispatchToProps = (dispatch: Container.TypedDispatch) => ({
+  // Navigate primary/secondary button click
   _onNavigate: (props: {}, selected: string) => {
     dispatch(
       RouteTreeGen.createNavigateAppend({
@@ -14,11 +17,17 @@ const mapDispatchToProps = (dispatch: Container.TypedDispatch) => ({
       })
     )
   },
+  _onNavigateExternal: (url: string) => openURL(url),
 })
-const mergeProps = (stateProps, dispatchProps) => ({
-  onNavigate: dispatchProps._onNavigate,
-})
-
-const WhatsNewContainer = Container.connect(mapStateToProps, mapDispatchToProps, mergeProps)(WhatsNew)
-
-export default WhatsNewContainer
+const mergeProps = (
+  stateProps: ReturnType<typeof mapStateToProps>,
+  dispatchProps: ReturnType<typeof mapDispatchToProps>
+) => {
+  const seenVersions = getSeenVersions(stateProps.lastSeenVersion, versions)
+  return {
+    onNavigate: dispatchProps._onNavigate,
+    onNavigateExternal: dispatchProps._onNavigateExternal,
+    seenVersions,
+  }
+}
+export default Container.connect(mapStateToProps, mapDispatchToProps, mergeProps)(WhatsNew)

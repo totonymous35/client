@@ -1,4 +1,3 @@
-import semver from 'semver'
 import logger from '../logger'
 import * as Types from '../constants/types/config'
 import * as Constants from '../constants/config'

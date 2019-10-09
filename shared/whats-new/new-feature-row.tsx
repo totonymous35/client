@@ -1,17 +1,9 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-import {ActionButton} from '../constants/types/whats-new'
+import {FeatureWithSeenState} from '../constants/types/whats-new'
 
-type Props = {
-  text: string
-  seen: boolean
-  imageSrc?: string | null
-  primaryButton?: ActionButton | null
-  secondaryButton?: ActionButton | null
-}
-
-const NewFeature = (props: Props) => {
+const NewFeature = (props: FeatureWithSeenState) => {
   const primaryButton = props.primaryButton ? (
     <Kb.Button
       type="Default"
@@ -41,7 +33,7 @@ const NewFeature = (props: Props) => {
       <Kb.Box2 direction="vertical" fullWidth={true} style={styles.contentContainer}>
         <Kb.Text type="Body">{props.text}</Kb.Text>
         <Kb.Box2 direction="vertical" style={styles.imageContainer}>
-          {props.imageSrc && <Kb.Image src={props.imageSrc} style={styles.image} />}
+          {props.image && <Kb.Image src={props.image} style={styles.image} />}
         </Kb.Box2>
         <Kb.Box2 direction="horizontal" style={styles.buttonRowContainer} gap="tiny">
           {primaryButton}

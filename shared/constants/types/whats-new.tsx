@@ -1,3 +1,9 @@
+export type CurretVersionId = '1.1.1'
+export type LastVersionId = '2.2.2'
+export type LastLastVersionId = '3.3.3'
+export type WhatsNewVersion = CurretVersionId | LastVersionId | LastLastVersionId
+export type WhatsNewVersions = [CurretVersionId, LastVersionId, LastLastVersionId]
+
 export type ActionButton = {
   text: string
   onNavigate: () => void
@@ -11,10 +17,3 @@ export type Feature = {
 }
 
 export type FeatureWithSeenState = Feature & {seen: boolean}
-
-export type Features = Array<Feature>
-
-export type Release = {
-  version: string
-  features: Features
-} | null

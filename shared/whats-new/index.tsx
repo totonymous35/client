@@ -1,9 +1,23 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-import {CurrentRelease, LastRelease, LastLastRelease} from './releases'
+import {WhatsNewVersion} from '../constants/types/whats-new'
+import {
+  CurrentVersion,
+  LastVersion,
+  LastLastVersion,
+  currentVersion,
+  lastVersion,
+  lastLastVersion,
+} from './versions'
 
-const WhatsNew = () => {
+type Props = {
+  onNavigate: (props: {}, selected: string) => void
+  onNavigateExternal: (url: string) => void
+  seenVersions: {[key in WhatsNewVersion]: boolean}
+}
+
+const WhatsNew = (props: Props) => {
   return (
     <Kb.ScrollView style={styles.scrollView}>
       <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" style={styles.container}>
@@ -13,9 +27,9 @@ const WhatsNew = () => {
           alignSelf="flex-start"
           style={styles.contentBackground}
         >
-          <CurrentRelease />
-          <LastRelease />
-          <LastLastRelease />
+          <CurrentVersion seen={props.seenVersions[currentVersion]} />
+          {lastVersion && <LastVersion seen={props.seenVersions[lastVersion]} />}
+          {lastLastVersion && <LastLastVersion seen={props.seenVersions[lastLastVersion]} />}
         </Kb.Box2>
       </Kb.Box2>
     </Kb.ScrollView>
