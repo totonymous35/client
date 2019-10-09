@@ -404,6 +404,8 @@ const setOpenAtLogin = async (state: Container.TypedState) => {
     },
   })
 
+  if (__DEV__)
+    return;
   if (isLinux) {
     const enabled =
       (await RPCTypes.ctlGetNixOnLoginStartupRpcPromise()) === RPCTypes.OnLoginStartupStatus.enabled
@@ -418,7 +420,7 @@ const setOpenAtLogin = async (state: Container.TypedState) => {
 
 const setNixOnLoginStartup = async (enabled: boolean) => {
   RPCTypes.ctlSetNixOnLoginStartupRpcPromise({enabled}).catch(err => {
-    console.info(`Error in sending ctlSetNixOnLoginStartup: ${err.message}`)
+    logger.warn(`Error in sending ctlSetNixOnLoginStartup: ${err.message}`)
   })
 }
 
