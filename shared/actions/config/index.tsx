@@ -595,12 +595,6 @@ const gregorPushState = (_: Container.TypedState, action: GregorGen.PushStatePay
   if (lastSeenItem) {
     const {body} = lastSeenItem.item
     const lastVersion = body.toString()
-    logger.info('JRY DEBUG: actions/config/index.tsx | GregorGen.pushState', {
-      body,
-      items,
-      lastSeenItem,
-      lastVersion,
-    })
     actions.push(
       ConfigGen.createSetWhatsNewLastSeenVersion({
         lastSeenVersion: lastVersion,

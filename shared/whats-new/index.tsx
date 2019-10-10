@@ -1,20 +1,13 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-import {WhatsNewVersion} from '../constants/types/whats-new'
-import {
-  CurrentVersion,
-  LastVersion,
-  LastLastVersion,
-  currentVersion,
-  lastVersion,
-  lastLastVersion,
-} from './versions'
+import {currentVersion, lastLastVersion, lastVersion, noVersion} from '../constants/whats-new'
+import {CurrentVersion, LastVersion, LastLastVersion} from './versions'
 
 type Props = {
   onNavigate: (props: {}, selected: string) => void
   onNavigateExternal: (url: string) => void
-  seenVersions: {[key in WhatsNewVersion]: boolean}
+  seenVersions: {[key: string]: boolean}
 }
 
 const WhatsNew = (props: Props) => {
@@ -28,8 +21,10 @@ const WhatsNew = (props: Props) => {
           style={styles.contentBackground}
         >
           <CurrentVersion seen={props.seenVersions[currentVersion]} />
-          {lastVersion && <LastVersion seen={props.seenVersions[lastVersion]} />}
-          {lastLastVersion && <LastLastVersion seen={props.seenVersions[lastLastVersion]} />}
+          {lastVersion && lastVersion !== noVersion && <LastVersion seen={props.seenVersions[lastVersion]} />}
+          {lastLastVersion && lastVersion !== noVersion && (
+            <LastLastVersion seen={props.seenVersions[lastLastVersion]} />
+          )}
         </Kb.Box2>
       </Kb.Box2>
     </Kb.ScrollView>
@@ -54,13 +49,11 @@ const styles = Styles.styleSheetCreate(() => ({
     paddingRight: Styles.globalMargins.tiny,
     paddingTop: Styles.globalMargins.tiny,
     width: '100%',
+    ...Styles.globalStyles.rounded,
   },
   scrollView: Styles.platformStyles({
     common: {
       width: '100%',
-    },
-    isElectron: {
-      ...Styles.globalStyles.rounded,
     },
   }),
   versionTitle: {

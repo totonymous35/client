@@ -1,27 +1,7 @@
 import React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-import {WhatsNewVersions} from '../constants/types/whats-new'
 import NewFeatureRow from './new-feature-row'
-
-/*
- * IMPORTANT:
- *    1. currentVersion > lastVersion > lastLastVersion
- *    2. Must be semver compatible
- *    Source: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
- *
- * HOW TO ADD A NEW RELEASE
- *    1. lastLastVersion = lastLastVersion
- *    2. lastLastVersion = currentVersion
- *    3. currentVersion = new version of release
- *    4. Update string-literal types in shared/constants/types/whats-new
- *    5. Add as many NewFeatureRows as needed
- */
-
-export const currentVersion = '3.3.3'
-export const lastVersion = ''
-export const lastLastVersion = ''
-export const versions: WhatsNewVersions = [currentVersion, lastVersion, lastLastVersion]
 
 type VersionProps = {
   seen: boolean

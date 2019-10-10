@@ -5,6 +5,8 @@ import {FeatureWithSeenState} from '../constants/types/whats-new'
 
 type Props = FeatureWithSeenState & {
   noSeparator?: boolean
+  onPrimaryButtonClick?: () => void
+  onSecondaryButtonClick?: () => void
 }
 
 const NewFeature = (props: Props) => {
@@ -14,7 +16,7 @@ const NewFeature = (props: Props) => {
       mode="Primary"
       label={props.primaryButton.text}
       style={styles.buttons}
-      onClick={() => props.primaryButton && props.primaryButton.onNavigate()}
+      onClick={props.onPrimaryButtonClick}
     />
   ) : null
 
@@ -25,7 +27,7 @@ const NewFeature = (props: Props) => {
         mode="Secondary"
         label={props.secondaryButton.text}
         style={styles.buttons}
-        onClick={() => props.secondaryButton && props.secondaryButton.onNavigate()}
+        onClick={props.onSecondaryButtonClick}
       />
     ) : null
   return (

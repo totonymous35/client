@@ -2,7 +2,6 @@ import * as RouteTreeGen from '../actions/route-tree-gen'
 import * as Container from '../util/container'
 import openURL from '../util/open-url'
 import {getSeenVersions} from '../constants/whats-new'
-import {versions} from './versions'
 import WhatsNew from '.'
 
 const mapStateToProps = (state: Container.TypedState) => ({
@@ -23,7 +22,7 @@ const mergeProps = (
   stateProps: ReturnType<typeof mapStateToProps>,
   dispatchProps: ReturnType<typeof mapDispatchToProps>
 ) => {
-  const seenVersions = getSeenVersions(stateProps.lastSeenVersion, versions)
+  const seenVersions = getSeenVersions(stateProps.lastSeenVersion)
   return {
     onNavigate: dispatchProps._onNavigate,
     onNavigateExternal: dispatchProps._onNavigateExternal,
