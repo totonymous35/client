@@ -19,8 +19,8 @@ import NewFeatureRow from './new-feature-row'
  */
 
 export const currentVersion = '3.3.3'
-export const lastVersion = '2.2.2'
-export const lastLastVersion = '1.1.1'
+export const lastVersion = ''
+export const lastLastVersion = ''
 export const versions: WhatsNewVersions = [currentVersion, lastVersion, lastLastVersion]
 
 type VersionProps = {
@@ -47,7 +47,7 @@ const VersionTitle = ({title}: {title: string}) => (
 export const CurrentVersion = (props: VersionProps) => {
   return (
     <Version>
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
@@ -64,7 +64,7 @@ export const LastVersion = (props: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last" />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
@@ -81,7 +81,7 @@ export const LastLastVersion = (props: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last Last" />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />

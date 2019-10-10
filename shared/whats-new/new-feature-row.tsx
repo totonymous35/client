@@ -3,7 +3,11 @@ import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
 import {FeatureWithSeenState} from '../constants/types/whats-new'
 
-const NewFeature = (props: FeatureWithSeenState) => {
+type Props = FeatureWithSeenState & {
+  noSeparator?: boolean
+}
+
+const NewFeature = (props: Props) => {
   const primaryButton = props.primaryButton ? (
     <Kb.Button
       type="Default"
@@ -25,7 +29,11 @@ const NewFeature = (props: FeatureWithSeenState) => {
       />
     ) : null
   return (
-    <Kb.Box2 direction="horizontal" fullWidth={true} style={styles.container}>
+    <Kb.Box2
+      direction="horizontal"
+      fullWidth={true}
+      style={Styles.collapseStyles([styles.container, props.noSeparator ? {marginTop: 0} : {}])}
+    >
       {/* Badging */}
       {!props.seen && (
         <Kb.Badge height={8} badgeStyle={styles.badgeStyle} containerStyle={styles.badgeContainerStyle} />
@@ -65,6 +73,7 @@ const styles = Styles.styleSheetCreate(() => ({
   container: {
     ...Styles.globalStyles.fullWidth,
     alignSelf: 'flex-start',
+    marginTop: Styles.globalMargins.tiny,
   },
   contentContainer: {
     backgroundColor: Styles.globalColors.white,

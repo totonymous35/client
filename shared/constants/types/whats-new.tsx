@@ -1,6 +1,6 @@
 export type CurretVersionId = '3.3.3'
-export type LastVersionId = '2.2.2'
-export type LastLastVersionId = '1.1.1'
+export type LastVersionId = ''
+export type LastLastVersionId = ''
 export type WhatsNewVersion = CurretVersionId | LastVersionId | LastLastVersionId
 export type WhatsNewVersions = [CurretVersionId, LastVersionId, LastLastVersionId]
 

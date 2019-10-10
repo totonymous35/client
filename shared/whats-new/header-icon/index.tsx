@@ -4,11 +4,12 @@ import * as Styles from '../../styles'
 import Popup from '../popup.desktop'
 
 type Props = {
-  newFeatures?: boolean
+  newRelease: boolean
   onClick: () => void
 }
 
 type PopupProps = {
+  newRelease: boolean
   // Desktop only
   attachToRef: React.RefObject<Kb.Box2>
   onClose: () => void
@@ -23,7 +24,7 @@ const realCSS = `
 
 // Forward the ref of the icon so we can attach the FloatingBox on desktop to this component
 const HeaderIcon = (props: Props) => {
-  return props.newFeatures ? (
+  return props.newRelease ? (
     <>
       <Kb.DesktopStyle style={realCSS} />
       <Kb.Icon
@@ -39,12 +40,12 @@ const HeaderIcon = (props: Props) => {
 }
 
 export const HeaderIconWithPopup = (props: PopupProps) => {
-  const {onClose, attachToRef} = props
+  const {newRelease, onClose, attachToRef} = props
   const [popupVisible, setPopupVisible] = React.useState(false)
   return (
     <>
       <HeaderIcon
-        newFeatures={false}
+        newRelease={newRelease}
         onClick={() => {
           popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
         }}

@@ -23,9 +23,12 @@ export const getSeenVersions = (lastSeenVersion: string, versions: WhatsNewVersi
     return initialMap
   }
 
+  // last and lastLast versions might not be set
+  const validVersions = versions.filter(isVersionValid)
+
   // Unseen versions are ones that are greated than the lastSeenVersion
   // seen =  lastLastVersion >= version
-  const seenVersions = versions.reduce(
+  const seenVersions = validVersions.reduce(
     (acc, version) => ({
       ...acc,
       [version]: semver.gte(lastSeenVersion, version),
