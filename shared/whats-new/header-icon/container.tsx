@@ -18,8 +18,7 @@ const HeaderIconContainer = Container.connectDEBUG(
   mapStateToProps,
   () => ({}),
   stateProps => ({
-    // newRelease: anyVersionsUnseen(stateProps.lastSeenVersion, versions),
-    newRelease: true,
+    newRelease: anyVersionsUnseen(stateProps.lastSeenVersion, versions),
   })
 )(HeaderIconComponent)
 

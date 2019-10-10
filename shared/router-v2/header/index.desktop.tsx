@@ -304,6 +304,10 @@ const styles = Styles.styleSheetCreate(
         },
       }),
       iconContainer: Styles.platformStyles({
+        common: {
+          // Needed to position blue badge
+          position: 'relative',
+        },
         isElectron: {
           ...Styles.desktopStyles.clickable,
           ...Styles.desktopStyles.windowDraggingClickable,

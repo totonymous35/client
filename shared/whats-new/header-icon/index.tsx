@@ -15,6 +15,9 @@ type PopupProps = {
   onClose: () => void
 }
 
+const badgeSize = 12
+const badgeSizeInner = badgeSize - 4
+
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
 const realCSS = `
   .rainbowGradient {
@@ -32,6 +35,13 @@ const HeaderIcon = (props: Props) => {
         style={styles.rainbowColor}
         className="rainbowGradient"
         onClick={props.onClick}
+      />
+      <Kb.Badge
+        border={true}
+        leftRightPadding={0}
+        height={badgeSize}
+        containerStyle={styles.badgeContainerStyle}
+        badgeStyle={styles.badgeStyles}
       />
     </>
   ) : (
@@ -66,6 +76,18 @@ export const HeaderIconWithPopup = (props: PopupProps) => {
 }
 
 const styles = Styles.styleSheetCreate(() => ({
+  badgeContainerStyle: {
+    position: 'absolute',
+    right: -1,
+    top: 1,
+  },
+  badgeStyles: {
+    backgroundColor: Styles.globalColors.blue,
+    // Manually set the innerSize of the blue circle to have a larger white border
+    borderRadius: badgeSizeInner,
+    height: badgeSizeInner,
+    minWidth: badgeSizeInner,
+  },
   rainbowColor: Styles.platformStyles({
     isElectron: {
       WebkitBackgroundClip: 'text',

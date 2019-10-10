@@ -76,6 +76,7 @@ const styles = Styles.styleSheetCreate(() => ({
     marginTop: Styles.globalMargins.tiny,
   },
   contentContainer: {
+    ...Styles.globalStyles.rounded,
     backgroundColor: Styles.globalColors.white,
     paddingBottom: Styles.globalMargins.tiny,
     paddingLeft: Styles.globalMargins.small,
