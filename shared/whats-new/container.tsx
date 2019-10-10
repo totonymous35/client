@@ -6,7 +6,7 @@ import {versions} from './versions'
 import WhatsNew from '.'
 
 const mapStateToProps = (state: Container.TypedState) => ({
-  lastSeenVersion: state.config.lastSeenVersion,
+  lastSeenVersion: state.config.whatsNewLastSeenVersion,
 })
 const mapDispatchToProps = (dispatch: Container.TypedDispatch) => ({
   // Navigate primary/secondary button click

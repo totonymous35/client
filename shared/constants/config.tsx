@@ -107,7 +107,6 @@ export const initialState: Types.State = {
   httpSrvAddress: '',
   httpSrvToken: '',
   justDeletedSelf: '',
-  lastSeenVersion: '',
   loggedIn: false,
   logoutHandshakeVersion: 1,
   logoutHandshakeWaiters: new Map(),
@@ -131,6 +130,7 @@ export const initialState: Types.State = {
   userActive: true,
   userSwitching: false,
   username: '',
+  whatsNewLastSeenVersion: '',
   windowState: {
     dockHidden: false,
     height: 800,

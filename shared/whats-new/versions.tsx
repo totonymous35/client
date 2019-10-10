@@ -18,24 +18,20 @@ import NewFeatureRow from './new-feature-row'
  *    5. Add as many NewFeatureRows as needed
  */
 
-export const currentVersion = '1.1.1'
+export const currentVersion = '3.3.3'
 export const lastVersion = '2.2.2'
-export const lastLastVersion = '3.3.3'
+export const lastLastVersion = '1.1.1'
 export const versions: WhatsNewVersions = [currentVersion, lastVersion, lastLastVersion]
 
 type VersionProps = {
   seen: boolean
-  children?: React.ReactNode
 }
 
-const Version = (props: VersionProps) => {
+const Version = ({children}: {children: React.ReactNode}) => {
   return (
     // Always pass `seen` prop to children of a version to show row-level badging
     <Kb.Box2 direction="vertical" alignItems="flex-start" fullWidth={true}>
-      {React.Children.map(props.children, child =>
-        // @ts-ignore
-        child ? React.cloneElement(child, {seen: props.seen}) : null
-      )}
+      {children}
     </Kb.Box2>
   )
 }
@@ -50,50 +46,50 @@ const VersionTitle = ({title}: {title: string}) => (
 
 export const CurrentVersion = (props: VersionProps) => {
   return (
-    <Version seen={props.seen}>
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
+    <Version>
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
     </Version>
   )
 }
 
 export const LastVersion = (props: VersionProps) => {
   return (
-    <Version seen={props.seen}>
+    <Version>
       <VersionTitle title="Last" />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
     </Version>
   )
 }
 
 export const LastLastVersion = (props: VersionProps) => {
   return (
-    <Version seen={props.seen}>
+    <Version>
       <VersionTitle title="Last Last" />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
-      <NewFeatureRow text="hi testing" seen={false} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={props.seen} />
     </Version>
   )
 }

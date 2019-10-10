@@ -1,8 +1,8 @@
 import * as Kb from '../../common-adapters'
-import * as ConfigGen from '../../actions/config-gen'
+import * as GregorGen from '../../actions/gregor-gen'
 import * as Container from '../../util/container'
 import {anyVersionsUnseen} from '../../constants/whats-new'
-import {versions} from '../versions'
+import {versions, currentVersion} from '../versions'
 import HeaderIconComponent, {HeaderIconWithPopup as HeaderIconWithPopupComponent} from './index'
 
 type OwnProps = {
@@ -10,7 +10,7 @@ type OwnProps = {
 }
 
 const mapStateToProps = (state: Container.TypedState) => ({
-  lastSeenVersion: state.config.lastSeenVersion,
+  lastSeenVersion: state.config.whatsNewLastSeenVersion,
 })
 
 // Just Whats New Icon connected for badge state
@@ -26,12 +26,13 @@ const HeaderIconContainer = Container.connectDEBUG(
 export const HeaderIconWithPopup = Container.connectDEBUG(
   mapStateToProps,
   (dispatch: Container.TypedDispatch) => ({
-    _onSetLastSeenVersion: (lastSeenVersion: string) =>
-      dispatch(
-        ConfigGen.createSetWhatsNewLastSeenVersion({
-          lastSeenVersion: lastSeenVersion,
-        })
-      ),
+    _onSetLastSeenVersion: (lastSeenVersion: string) => {
+      const action = GregorGen.createUpdateCategory({
+        body: lastSeenVersion,
+        category: 'whatsNewLastSeenVersion',
+      })
+      dispatch(action)
+    },
   }),
   (stateProps, dispatchProps, ownProps: OwnProps) => {
     const newRelease = anyVersionsUnseen(stateProps.lastSeenVersion, versions)
@@ -40,7 +41,7 @@ export const HeaderIconWithPopup = Container.connectDEBUG(
       newRelease,
       onClose: () => {
         if (newRelease) {
-          dispatchProps._onSetLastSeenVersion(stateProps.lastSeenVersion)
+          dispatchProps._onSetLastSeenVersion(currentVersion)
         }
       },
     }

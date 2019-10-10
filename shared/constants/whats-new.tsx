@@ -11,10 +11,6 @@ export const anyVersionsUnseen = (lastSeenVersion: string, versions: WhatsNewVer
   Object.values(getSeenVersions(lastSeenVersion, versions)).some(seen => !seen)
 
 export const getSeenVersions = (lastSeenVersion: string, versions: WhatsNewVersions): seenVersionsMap => {
-  console.log('JRY getSeenVersions', {
-    lastSeenVersion,
-    versions,
-  })
   const [currentVersion, lastVersion, lastLastVersion] = versions
   const initialMap: seenVersionsMap = {
     [currentVersion]: false,
@@ -24,16 +20,15 @@ export const getSeenVersions = (lastSeenVersion: string, versions: WhatsNewVersi
 
   // User has no entry in Gregor for lastSeenVersion, so mark all as unseen
   if (!lastSeenVersion || !semver.valid(lastSeenVersion)) {
-    console.log('JRY getSeenVersions - user does not have a last seen version entry')
     return initialMap
   }
 
   // Unseen versions are ones that are greated than the lastSeenVersion
-  // unseen = lastSeenVersion > version
+  // seen =  lastLastVersion >= version
   const seenVersions = versions.reduce(
     (acc, version) => ({
       ...acc,
-      [version]: semver.gt(lastSeenVersion, version),
+      [version]: semver.gte(lastSeenVersion, version),
     }),
     initialMap
   )

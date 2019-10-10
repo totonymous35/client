@@ -8,9 +8,10 @@ type Props = {
   onClick: () => void
 }
 
-type PropsWithPopup = {
+type PopupProps = {
   // Desktop only
   attachToRef: React.RefObject<Kb.Box2>
+  onClose: () => void
 }
 
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
@@ -37,8 +38,8 @@ const HeaderIcon = (props: Props) => {
   )
 }
 
-export const HeaderIconWithPopup = (props: PropsWithPopup) => {
-  const {attachToRef} = props
+export const HeaderIconWithPopup = (props: PopupProps) => {
+  const {onClose, attachToRef} = props
   const [popupVisible, setPopupVisible] = React.useState(false)
   return (
     <>
@@ -53,7 +54,10 @@ export const HeaderIconWithPopup = (props: PropsWithPopup) => {
           attachTo={() => attachToRef.current}
           position="bottom right"
           positionFallbacks={['bottom right', 'bottom center']}
-          onHidden={() => setPopupVisible(false)}
+          onHidden={() => {
+            onClose()
+            setPopupVisible(false)
+          }}
         />
       )}
     </>

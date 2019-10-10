@@ -71,9 +71,3 @@ export const modalRoutes: RouteMap = {
 }
 
 export const loggedOutRoutes: RouteMap = {..._loggedOutRoutes, ...signupNewRoutes}
-
-console.log('JRY', {
-  loggedOutRoutes,
-  modalRoutes,
-  routes,
-})
