@@ -117,12 +117,16 @@ const modalHeight = 424
 
 const styles = Styles.styleSheetCreate(() => ({
   iconContainer: {
-    // Needed to position blue badge
+    alignItems: 'center',
+    borderRadius: Styles.borderRadius,
     height: 25,
     justifyContent: 'center',
     margin: Styles.globalMargins.small,
+    padding: Styles.globalMargins.xtiny,
+    // Needed to position blue badge
     position: 'relative',
-    width: 20,
+    // Fix width since story container wants to be width: 100%
+    width: 24,
   },
   newFeatureContainer: {
     backgroundColor: Styles.globalColors.blueGrey,
