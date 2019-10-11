@@ -27,24 +27,11 @@ const contactRow = (_: number, props: ContactRowProps) => {
   const source = props.pictureUri ? {uri: props.pictureUri} : null
 
   return (
-    <Kb.Box
-      style={{
-        ...Styles.globalStyles.flexBoxRow,
-        alignItems: 'center',
-        height: 56,
-        padding: Styles.globalMargins.small,
-        width: '100%',
-      }}
-    >
-      <Kb.Box style={{...Styles.globalStyles.flexBoxRow, alignItems: 'center', flex: 1}}>
-        <Kb.Box style={{...Styles.globalStyles.flexBoxRow, alignItems: 'center', flex: 1}}>
-          {!!hasThumbnail && !!source && (
-            <Kb.NativeImage
-              style={{borderRadius: 24, height: 48, marginRight: 16, width: 48}}
-              source={source}
-            />
-          )}
-          {!hasThumbnail && <Kb.Avatar size={48} style={{marginRight: 16}} />}
+    <Kb.Box style={styles.contactRowBox}>
+      <Kb.Box style={styles.contactRowInnerBox}>
+        <Kb.Box style={styles.contactRowInnerBox}>
+          {!!hasThumbnail && !!source && <Kb.NativeImage style={styles.thumbnail} source={source} />}
+          {!hasThumbnail && <Kb.Avatar size={48} style={styles.placeHolderAvatar} />}
           <Kb.Box>
             <Kb.Box style={Styles.globalStyles.flexBoxRow}>
               <Kb.Text type="BodySemibold">{props.name}</Kb.Text>
@@ -62,11 +49,7 @@ const contactRow = (_: number, props: ContactRowProps) => {
             waiting={props.loading}
             small={true}
             onClick={props.onClick}
-            style={{
-              paddingLeft: Styles.globalMargins.small,
-              paddingRight: Styles.globalMargins.small,
-              width: 100,
-            }}
+            style={styles.inviteButton}
           />
         </Kb.Box>
       </Kb.Box>
@@ -120,32 +103,15 @@ export const InviteByContact = (props: InviteByContactProps) => {
     <Kb.Box2 direction="vertical" fullWidth={true} fullHeight={true}>
       <Kb.HeaderHocHeader onBack={props.onBack} title="Invite contacts" />
       {!!props.errorMessage && (
-        <Kb.Box2
-          direction="horizontal"
-          style={{
-            alignItems: 'center',
-            backgroundColor: Styles.globalColors.red,
-            justifyContent: 'center',
-            padding: Styles.globalMargins.tiny,
-          }}
-          fullWidth={true}
-        >
+        <Kb.Box2 direction="horizontal" style={styles.errorMessageContainer} fullWidth={true}>
           <Kb.Text center={true} type="BodySemibold" negative={true}>
             {props.errorMessage}
           </Kb.Text>
         </Kb.Box2>
       )}
       {hasItems && (
-        <Kb.Box
-          style={{...Styles.globalStyles.flexBoxColumn, flex: 1, paddingBottom: Styles.globalMargins.xtiny}}
-        >
-          <Kb.Box
-            style={{
-              ...Styles.globalStyles.flexBoxRow,
-              borderBottomColor: Styles.globalColors.black_10,
-              borderBottomWidth: Styles.hairlineWidth,
-            }}
-          >
+        <Kb.Box style={styles.listContainer}>
+          <Kb.Box style={styles.filterContainer}>
             <Kb.Input
               keyboardType="email-address"
               value={filterValue}
@@ -153,13 +119,9 @@ export const InviteByContact = (props: InviteByContactProps) => {
               hintText="Search"
               hideUnderline={true}
               small={true}
-              style={{width: '100%'}}
-              errorStyle={{minHeight: 14}}
-              inputStyle={{
-                fontSize: 16,
-                margin: Styles.globalMargins.small,
-                textAlign: 'left',
-              }}
+              style={styles.filter}
+              errorStyle={styles.filterError}
+              inputStyle={styles.filterInput}
             />
           </Kb.Box>
           <FloatingRolePicker
@@ -176,18 +138,7 @@ export const InviteByContact = (props: InviteByContactProps) => {
             items={listItems}
             fixedHeight={56}
             ListHeaderComponent={
-              <Kb.ClickableBox
-                onClick={() => controlRolePicker(true)}
-                style={{
-                  ...Styles.globalStyles.flexBoxColumn,
-                  alignItems: 'center',
-                  borderBottomColor: Styles.globalColors.black_10,
-                  borderBottomWidth: Styles.hairlineWidth,
-                  justifyContent: 'center',
-                  marginBottom: Styles.globalMargins.xtiny,
-                  padding: Styles.globalMargins.small,
-                }}
-              >
+              <Kb.ClickableBox onClick={() => controlRolePicker(true)} style={styles.rolePickerBox}>
                 <Kb.Text center={true} type="BodySmall">
                   Users will be invited to {props.teamName} as
                   <Kb.Text type="BodySmallPrimaryLink">{' ' + props.selectedRole + 's'}</Kb.Text>.
@@ -195,10 +146,81 @@ export const InviteByContact = (props: InviteByContactProps) => {
               </Kb.ClickableBox>
             }
             renderItem={contactRow}
-            style={{alignSelf: 'stretch'}}
+            style={styles.contactList}
           />
         </Kb.Box>
       )}
     </Kb.Box2>
   )
 }
+
+const styles = Styles.styleSheetCreate(
+  () =>
+    ({
+      contactList: {
+        alignSelf: 'stretch',
+      },
+      contactRowBox: {
+        ...Styles.globalStyles.flexBoxRow,
+        alignItems: 'center',
+        height: 56,
+        padding: Styles.globalMargins.small,
+        width: '100%',
+      },
+      contactRowInnerBox: {
+        ...Styles.globalStyles.flexBoxRow,
+        alignItems: 'center',
+        flex: 1,
+      },
+      rolePickerBox: {
+        ...Styles.globalStyles.flexBoxColumn,
+        alignItems: 'center',
+        borderBottomColor: Styles.globalColors.black_10,
+        borderBottomWidth: Styles.hairlineWidth,
+        justifyContent: 'center',
+        marginBottom: Styles.globalMargins.xtiny,
+        padding: Styles.globalMargins.small,
+      },
+      listContainer: {
+        ...Styles.globalStyles.flexBoxColumn,
+        flex: 1,
+        paddingBottom: Styles.globalMargins.xtiny,
+      },
+      filterContainer: {
+        ...Styles.globalStyles.flexBoxRow,
+        borderBottomColor: Styles.globalColors.black_10,
+        borderBottomWidth: Styles.hairlineWidth,
+      },
+      filter: {
+        width: '100%',
+      },
+      filterError: {
+        minHeight: 14,
+      },
+      filterInput: {
+        fontSize: 16,
+        margin: Styles.globalMargins.small,
+        textAlign: 'left',
+      },
+      inviteButton: {
+        paddingLeft: Styles.globalMargins.small,
+        paddingRight: Styles.globalMargins.small,
+        width: 100,
+      },
+      errorMessageContainer: {
+        alignItems: 'center',
+        backgroundColor: Styles.globalColors.red,
+        justifyContent: 'center',
+        padding: Styles.globalMargins.tiny,
+      },
+      thumbnail: {
+        borderRadius: 24,
+        height: 48,
+        marginRight: 16,
+        width: 48,
+      },
+      placeHolderAvatar: {
+        marginRight: 16,
+      },
+    } as const)
+)
