@@ -219,12 +219,11 @@ class Header extends React.PureComponent<Props> {
                 />
               )}
               {flags.whatsNew && (
-                <Kb.Box
-                  style={styles.iconContainer}
-                  className={Styles.classNames('hover_container', 'hover_background_color_black_10')}
-                >
-                  <WhatsNewIconWithPopup attachToRef={whatsNewAttachToRef} />
-                </Kb.Box>
+                <WhatsNewIconWithPopup
+                  color={opt.whatsNewIconColor}
+                  badgeColor={opt.whatsNewIconColor}
+                  attachToRef={whatsNewAttachToRef}
+                />
               )}
               {!title && rightActions}
               {windowDecorationsAreNeeded && !windowDecorationsDrawnByBanner && <SystemButtons />}

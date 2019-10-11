@@ -5,19 +5,18 @@ import {keybaseFM} from '../../constants/whats-new'
 import Popup from '../popup.desktop'
 
 type Props = {
+  color?: string
+  badgeColor?: string
+  className?: string
   newRelease: boolean
-  onClick: () => void
+  onClick?: () => void
 }
 
-type PopupProps = {
-  newRelease: boolean
+type PopupProps = Props & {
   // Desktop only
   attachToRef: React.RefObject<Kb.Box2>
   onClose: () => void
 }
-
-const badgeSize = 12
-const badgeSizeInner = badgeSize - 4
 
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
 const realCSS = `
@@ -28,6 +27,9 @@ const realCSS = `
 
 // Forward the ref of the icon so we can attach the FloatingBox on desktop to this component
 const HeaderIcon = (props: Props) => {
+  const badgeSize = props.badgeColor ? 8 : 12
+  const badgeSizeInner = badgeSize - 4
+
   return props.newRelease ? (
     <>
       <Kb.DesktopStyle style={realCSS} />
@@ -41,28 +43,72 @@ const HeaderIcon = (props: Props) => {
         border={true}
         leftRightPadding={0}
         height={badgeSize}
-        containerStyle={styles.badgeContainerStyle}
-        badgeStyle={styles.badgeStyles}
+        containerStyle={Styles.collapseStyles([
+          styles.badgeContainerStyle,
+          props.badgeColor
+            ? {
+                right: 1,
+                top: 3,
+              }
+            : {
+                right: -1,
+                top: 1,
+              },
+        ])}
+        badgeStyle={Styles.collapseStyles([
+          styles.badgeStyles,
+          props.badgeColor
+            ? {
+                backgroundColor: props.badgeColor,
+                position: 'absolute',
+              }
+            : {
+                // Manually set the innerSize of the blue circle to have a larger white border
+                borderRadius: badgeSizeInner,
+                height: badgeSizeInner,
+                minWidth: badgeSizeInner,
+              },
+        ])}
       />
     </>
   ) : (
-    <Kb.Icon type="iconfont-radio" color={Styles.globalColors.black} onClick={props.onClick} />
+    // clasName will be hover_contained_color_$color so that should override the non-hover color set by the `color` prop.
+    <Kb.Icon type="iconfont-radio" className={props.className} color={props.color} onClick={props.onClick} />
   )
 }
 
 export const HeaderIconWithPopup = (props: PopupProps) => {
-  const {newRelease, onClose, attachToRef} = props
+  const {badgeColor, color, newRelease, onClose, attachToRef} = props
   const [popupVisible, setPopupVisible] = React.useState(false)
+  const baseColor = Styles.globalColors.black_50
+  const iconColor = color ? color : baseColor
+  const popupVisibleColor = color || Styles.globalColors.black
   return (
     <>
-      <Kb.WithTooltip disabled={popupVisible} tooltip={keybaseFM} position="bottom center">
-        <HeaderIcon
-          newRelease={newRelease}
-          onClick={() => {
-            popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
-          }}
-        />
-      </Kb.WithTooltip>
+      <Kb.Box style={styles.iconContainerMargins}>
+        <Kb.WithTooltip disabled={popupVisible} tooltip={keybaseFM} position="bottom center">
+          <Kb.Box
+            style={styles.iconContainer}
+            className={Styles.classNames(
+              popupVisible
+                ? ['background_color_black_10']
+                : ['hover_container', 'hover_background_color_black_10']
+            )}
+            onClick={() => {
+              popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
+            }}
+          >
+            <HeaderIcon
+              badgeColor={badgeColor}
+              color={popupVisible ? popupVisibleColor : iconColor}
+              className={Styles.classNames(
+                color ? `hover_contained_color_${color}` : 'hover_contained_color_black'
+              )}
+              newRelease={newRelease}
+            />
+          </Kb.Box>
+        </Kb.WithTooltip>
+      </Kb.Box>
       {!Styles.isMobile && popupVisible && (
         <Popup
           attachTo={() => attachToRef.current}
@@ -81,15 +127,30 @@ export const HeaderIconWithPopup = (props: PopupProps) => {
 const styles = Styles.styleSheetCreate(() => ({
   badgeContainerStyle: {
     position: 'absolute',
-    right: -1,
-    top: 1,
   },
   badgeStyles: {
     backgroundColor: Styles.globalColors.blue,
-    // Manually set the innerSize of the blue circle to have a larger white border
-    borderRadius: badgeSizeInner,
-    height: badgeSizeInner,
-    minWidth: badgeSizeInner,
+  },
+  iconContainer: Styles.platformStyles({
+    common: {
+      // Needed to position blue badge
+      position: 'relative',
+    },
+    isElectron: {
+      ...Styles.desktopStyles.clickable,
+      ...Styles.desktopStyles.windowDraggingClickable,
+      ...Styles.globalStyles.flexBoxColumn,
+      alignItems: 'center',
+      borderRadius: Styles.borderRadius,
+      padding: Styles.globalMargins.xtiny,
+    },
+  }),
+  // This exists so WithTooltip won't appear before the hover background is
+  // shown since WithTooltip triggers on the total size including margins and
+  // the hover background triggers on padding
+  iconContainerMargins: {
+    marginLeft: Styles.globalMargins.xtiny,
+    marginRight: Styles.globalMargins.xtiny,
   },
   rainbowColor: Styles.platformStyles({
     isElectron: {
