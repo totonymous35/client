@@ -1,6 +1,7 @@
 import React from 'react'
 import * as Kb from '../../common-adapters'
 import * as Styles from '../../styles'
+import {keybaseFM} from '../../constants/whats-new'
 import Popup from '../popup.desktop'
 
 type Props = {
@@ -54,12 +55,14 @@ export const HeaderIconWithPopup = (props: PopupProps) => {
   const [popupVisible, setPopupVisible] = React.useState(false)
   return (
     <>
-      <HeaderIcon
-        newRelease={newRelease}
-        onClick={() => {
-          popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
-        }}
-      />
+      <Kb.WithTooltip disabled={popupVisible} tooltip={keybaseFM} position="bottom center">
+        <HeaderIcon
+          newRelease={newRelease}
+          onClick={() => {
+            popupVisible ? setPopupVisible(false) : !!attachToRef && setPopupVisible(true)
+          }}
+        />
+      </Kb.WithTooltip>
       {!Styles.isMobile && popupVisible && (
         <Popup
           attachTo={() => attachToRef.current}

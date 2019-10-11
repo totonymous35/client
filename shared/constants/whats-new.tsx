@@ -27,6 +27,7 @@ export const currentVersion: CurrentVersion = '2.3.3'
 export const lastVersion: LastVersion = '0.0.0'
 export const lastLastVersion: LastLastVersion = '0.0.0'
 export const versions: WhatsNewVersions = [currentVersion, lastVersion, lastLastVersion]
+export const keybaseFM = 'Keybase FM 87.8'
 
 type seenVersionsMap = {[key in WhatsNewVersion]: boolean}
 
