@@ -9,6 +9,8 @@ const testingImage = require('../images/releases/4.2.1/1.png')
 
 type VersionProps = {
   seen: boolean
+  onNavigate: (props: {}, selected: string) => void
+  onNavigateExternal: (url: string) => void
 }
 
 const Version = ({children}: {children: React.ReactNode}) => {
@@ -28,25 +30,33 @@ const VersionTitle = ({title}: {title: string}) => (
   </Kb.Box2>
 )
 
-export const CurrentVersion = (props: VersionProps) => {
+export const CurrentVersion = ({seen, onNavigate, onNavigateExternal}: VersionProps) => {
   return (
     <Version>
-      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
+      <NewFeatureRow text="hi testing" noSeparator={true} seen={seen} />
       <NewFeatureRow
         text="testing testing testing testing testing testing testing testing
 testing testing testing testing testing testing testing testing testing testing
 testing testing testing testing testing testing testing testing testing testing
 testing testing testing testing testing testing"
         image={testingImage}
-        seen={props.seen}
+        seen={seen}
+        primaryButtonText="Read the docs"
+        onPrimaryButtonClick={() => {
+          onNavigateExternal('https://keybase.io/docs')
+        }}
+        secondaryButtonText="Try it out"
+        onSecondaryButtonClick={() => {
+          onNavigate({}, 'walletOnboarding')
+        }}
       />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }

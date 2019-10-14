@@ -20,10 +20,24 @@ const WhatsNew = (props: Props) => {
           alignSelf="flex-start"
           style={styles.contentBackground}
         >
-          <CurrentVersion seen={props.seenVersions[currentVersion]} />
-          {lastVersion && lastVersion !== noVersion && <LastVersion seen={props.seenVersions[lastVersion]} />}
+          <CurrentVersion
+            seen={props.seenVersions[currentVersion]}
+            onNavigate={props.onNavigate}
+            onNavigateExternal={props.onNavigateExternal}
+          />
+          {lastVersion && lastVersion !== noVersion && (
+            <LastVersion
+              seen={props.seenVersions[lastVersion]}
+              onNavigate={props.onNavigate}
+              onNavigateExternal={props.onNavigateExternal}
+            />
+          )}
           {lastLastVersion && lastVersion !== noVersion && (
-            <LastLastVersion seen={props.seenVersions[lastLastVersion]} />
+            <LastLastVersion
+              seen={props.seenVersions[lastLastVersion]}
+              onNavigate={props.onNavigate}
+              onNavigateExternal={props.onNavigateExternal}
+            />
           )}
         </Kb.Box2>
       </Kb.Box2>
