@@ -10,22 +10,22 @@ type Props = FeatureWithSeenState & {
 }
 
 const NewFeature = (props: Props) => {
-  const primaryButton = props.primaryButton ? (
+  const primaryButton = props.primaryButtonText ? (
     <Kb.Button
       type="Default"
       mode="Primary"
-      label={props.primaryButton.text}
+      label={props.primaryButtonText}
       style={styles.buttons}
       onClick={props.onPrimaryButtonClick}
     />
   ) : null
 
   const secondaryButton =
-    props.primaryButton && props.secondaryButton ? (
+    props.primaryButtonText && props.secondaryButtonText ? (
       <Kb.Button
         type="Default"
         mode="Secondary"
-        label={props.secondaryButton.text}
+        label={props.secondaryButtonText}
         style={styles.buttons}
         onClick={props.onSecondaryButtonClick}
       />
@@ -90,7 +90,9 @@ const styles = Styles.styleSheetCreate(() => ({
     maxHeight: 96,
     maxWidth: 216,
   },
-  imageContainer: {},
+  imageContainer: {
+    marginTop: Styles.globalMargins.tiny,
+  },
 }))
 
 export default NewFeature

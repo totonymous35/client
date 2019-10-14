@@ -3,6 +3,10 @@ import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
 import NewFeatureRow from './new-feature-row'
 
+/* Include images */
+/* const imageName = require('../images/release/MAJ.MIN.PATCH/name.png') */
+const testingImage = require('../images/releases/4.2.1/1.png')
+
 type VersionProps = {
   seen: boolean
 }
@@ -28,7 +32,14 @@ export const CurrentVersion = (props: VersionProps) => {
   return (
     <Version>
       <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <NewFeatureRow
+        text="testing testing testing testing testing testing testing testing
+testing testing testing testing testing testing testing testing testing testing
+testing testing testing testing testing testing testing testing testing testing
+testing testing testing testing testing testing"
+        image={testingImage}
+        seen={props.seen}
+      />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
       <NewFeatureRow text="hi testing" seen={props.seen} />
