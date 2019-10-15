@@ -8,7 +8,6 @@ import FeedbackTab from './feedback/container'
 import InvitationsTab from './invites/container'
 import AccountTab from './account/container'
 import NotificationsTab from './notifications/container'
-import DisplayTab from './display/container'
 import PasswordTab from './password/container'
 import ScreenprotectorTab from './screenprotector-container.native'
 import DbNukeConfirm from './db-nuke-confirm/container'
@@ -23,13 +22,13 @@ import {DeleteModal} from './account/confirm-delete'
 import {Email, Phone, VerifyPhone} from './account/add-modals'
 import ManageContactsTab from './manage-contacts.native'
 import PushPrompt from './notifications/push-prompt.native'
+import WhatsNewTab from '../whats-new/container'
 
 export const newRoutes = {
   [Constants.aboutTab]: {getScreen: (): typeof AboutTab => require('./about-container').default},
   // TODO connect broken
   [Constants.advancedTab]: {getScreen: (): typeof AdvancedTab => require('./advanced/container').default},
   [Constants.chatTab]: {getScreen: (): typeof ChatTab => require('./chat/container').default},
-  [Constants.displayTab]: {getScreen: (): typeof DisplayTab => require('./display/container').default},
   [Constants.fsTab]: {getScreen: (): typeof FsTab => require('./files/container').default},
   [Constants.walletsTab]: {
     getScreen: (): typeof WalletsTab => require('../wallets/wallet/container').default,
@@ -45,6 +44,9 @@ export const newRoutes = {
   },
   [Constants.screenprotectorTab]: {
     getScreen: (): typeof ScreenprotectorTab => require('./screenprotector-container.native').default,
+  },
+  [Constants.whatsNewTab]: {
+    getScreen: (): typeof WhatsNewTab => require('../whats-new/container.tsx').default,
   },
   addEmail: {getScreen: (): typeof Email => require('./account/add-modals').Email},
   addPhone: {getScreen: (): typeof Phone => require('./account/add-modals').Phone},

@@ -5,10 +5,12 @@ import * as Styles from '../../styles'
 type SettingsItemProps = {
   badgeNumber?: number
   icon?: IconType
+  iconComponent?: React.ComponentType
   inProgress?: boolean
   largerBadgeMinWidthFix?: boolean
   onClick: () => void
   text: string
+  subText?: string
   textColor?: Styles.Color
   selected?: boolean
 }
@@ -28,13 +30,15 @@ export default function SettingsItem(props: SettingsItemProps) {
           : {},
       ])}
     >
-      {props.icon && (
+      {props.iconComponent ? (
+        <props.iconComponent />
+      ) : props.icon ? (
         <Icon
           type={props.icon}
           color={Styles.globalColors.black_20}
           style={{marginRight: Styles.isMobile ? Styles.globalMargins.small : Styles.globalMargins.tiny}}
         />
-      )}
+      ) : null}
       <Text
         type="BodySemibold"
         style={Styles.collapseStyles([

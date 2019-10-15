@@ -1,12 +1,14 @@
 import React from 'react'
 import * as Kb from '../../common-adapters'
 import * as Styles from '../../styles'
+import {IconStyle} from '../../common-adapters/icon'
 import {keybaseFM} from '../../constants/whats-new'
 import Popup from '../popup.desktop'
 
 type Props = {
   color?: string
   badgeColor?: string
+  style?: IconStyle
   className?: string
   newRelease: boolean
   onClick?: () => void
@@ -31,46 +33,61 @@ const HeaderIcon = (props: Props) => {
   const badgeSizeInner = badgeSize - 4
 
   return props.newRelease ? (
-    <>
-      <Kb.DesktopStyle style={realCSS} />
+    Styles.isMobile ? (
       <Kb.Icon
         type="iconfont-radio"
-        style={styles.rainbowColor}
-        className="rainbowGradient"
         onClick={props.onClick}
+        color={Styles.globalColors.blue}
+        style={Styles.collapseStyles([{marginRight: Styles.globalMargins.small}, props.style])}
       />
-      <Kb.Badge
-        border={true}
-        leftRightPadding={0}
-        height={badgeSize}
-        containerStyle={Styles.collapseStyles([
-          styles.badgeContainerStyle,
-          props.badgeColor
-            ? {
-                right: 1,
-                top: 3,
-              }
-            : {
-                right: -1,
-                top: 1,
-              },
-        ])}
-        badgeStyle={Styles.collapseStyles([
-          styles.badgeStyles,
-          props.badgeColor
-            ? {
-                backgroundColor: props.badgeColor,
-                position: 'absolute',
-              }
-            : {
-                // Manually set the innerSize of the blue circle to have a larger white border
-                borderRadius: badgeSizeInner,
-                height: badgeSizeInner,
-                minWidth: badgeSizeInner,
-              },
-        ])}
-      />
-    </>
+    ) : (
+      <>
+        <Kb.DesktopStyle style={realCSS} />
+        <Kb.Icon
+          type="iconfont-radio"
+          style={styles.rainbowColor}
+          className="rainbowGradient"
+          onClick={props.onClick}
+        />
+        <Kb.Badge
+          border={true}
+          leftRightPadding={0}
+          height={badgeSize}
+          containerStyle={Styles.collapseStyles([
+            styles.badgeContainerStyle,
+            props.badgeColor
+              ? {
+                  right: 1,
+                  top: 3,
+                }
+              : {
+                  right: -1,
+                  top: 1,
+                },
+          ])}
+          badgeStyle={Styles.collapseStyles([
+            styles.badgeStyles,
+            props.badgeColor
+              ? {
+                  backgroundColor: props.badgeColor,
+                  position: 'absolute',
+                }
+              : {
+                  // Manually set the innerSize of the blue circle to have a larger white border
+                  borderRadius: badgeSizeInner,
+                  height: badgeSizeInner,
+                  minWidth: badgeSizeInner,
+                },
+          ])}
+        />
+      </>
+    )
+  ) : Styles.isMobile ? (
+    <Kb.Icon
+      type="iconfont-radio"
+      color={Styles.globalColors.black_20}
+      style={Styles.collapseStyles([{marginRight: Styles.globalMargins.small}, props.style])}
+    />
   ) : (
     // clasName will be hover_contained_color_$color so that should override the non-hover color set by the `color` prop.
     <Kb.Icon type="iconfont-radio" className={props.className} color={props.color} onClick={props.onClick} />

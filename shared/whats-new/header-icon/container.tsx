@@ -1,12 +1,14 @@
 import * as Kb from '../../common-adapters'
 import * as GregorGen from '../../actions/gregor-gen'
 import * as Container from '../../util/container'
+import {IconStyle} from '../../common-adapters/icon'
 import {currentVersion, anyVersionsUnseen} from '../../constants/whats-new'
 import HeaderIconComponent, {HeaderIconWithPopup as HeaderIconWithPopupComponent} from './index'
 
 type OwnProps = {
   color?: string
   badgeColor?: string
+  style?: IconStyle
 }
 
 type PopupOwnProps = OwnProps & {
@@ -24,7 +26,9 @@ const HeaderIconContainer = Container.connect(
   (stateProps, _, ownProps: OwnProps) => ({
     badgeColor: ownProps.badgeColor,
     color: ownProps.color,
-    newRelease: anyVersionsUnseen(stateProps.lastSeenVersion),
+    newRelease: true,
+    /* newRelease: anyVersionsUnseen(stateProps.lastSeenVersion), */
+    style: ownProps.style,
   })
 )(HeaderIconComponent)
 
@@ -52,6 +56,7 @@ export const HeaderIconWithPopup = Container.connect(
           dispatchProps._onUpdateLastSeenVersion(currentVersion)
         }
       },
+      style: ownProps.style,
     }
   }
 )(HeaderIconWithPopupComponent)

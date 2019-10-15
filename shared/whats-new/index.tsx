@@ -13,11 +13,18 @@ type Props = {
 const WhatsNew = (props: Props) => {
   return (
     <Kb.ScrollView style={styles.scrollView}>
-      <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" style={styles.container}>
+      <Kb.Box2
+        direction="vertical"
+        alignItems="flex-start"
+        alignSelf="flex-start"
+        fullHeight={Styles.isMobile}
+        style={styles.container}
+      >
         <Kb.Box2
           direction="vertical"
           alignItems="flex-start"
           alignSelf="flex-start"
+          fullHeight={Styles.isMobile}
           style={styles.contentBackground}
         >
           <CurrentVersion
@@ -56,18 +63,25 @@ const styles = Styles.styleSheetCreate(() => ({
       width: modalWidth,
     },
   }),
-  contentBackground: {
-    backgroundColor: Styles.globalColors.blueGrey,
-    paddingBottom: Styles.globalMargins.tiny,
-    paddingLeft: Styles.globalMargins.tiny,
-    paddingRight: Styles.globalMargins.tiny,
-    paddingTop: Styles.globalMargins.tiny,
-    width: '100%',
-    ...Styles.globalStyles.rounded,
-  },
+  contentBackground: Styles.platformStyles({
+    common: {
+      backgroundColor: Styles.globalColors.blueGrey,
+      ...Styles.globalStyles.rounded,
+    },
+    isElectron: {
+      ...Styles.padding(Styles.globalMargins.tiny),
+    },
+    isMobile: {
+      ...Styles.padding(Styles.globalMargins.small),
+    },
+  }),
   scrollView: Styles.platformStyles({
     common: {
       width: '100%',
+    },
+    isMobile: {
+      height: '100%',
+      maxHeight: '100%',
     },
   }),
   versionTitle: {

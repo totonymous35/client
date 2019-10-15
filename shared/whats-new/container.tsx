@@ -1,7 +1,7 @@
 import * as RouteTreeGen from '../actions/route-tree-gen'
 import * as Container from '../util/container'
 import openURL from '../util/open-url'
-import {getSeenVersions} from '../constants/whats-new'
+import {getSeenVersions, keybaseFM} from '../constants/whats-new'
 import WhatsNew from '.'
 
 const mapStateToProps = (state: Container.TypedState) => ({
@@ -22,11 +22,28 @@ const mergeProps = (
   stateProps: ReturnType<typeof mapStateToProps>,
   dispatchProps: ReturnType<typeof mapDispatchToProps>
 ) => {
-  const seenVersions = getSeenVersions(stateProps.lastSeenVersion)
+  const seenVersions = getSeenVersions('0.0.0')
   return {
     onNavigate: dispatchProps._onNavigate,
     onNavigateExternal: dispatchProps._onNavigateExternal,
     seenVersions,
   }
 }
-export default Container.connect(mapStateToProps, mapDispatchToProps, mergeProps)(WhatsNew)
+
+// @ts-ignore
+WhatsNew.navigationOptions = Container.isMobile
+  ? {
+      HeaderTitle: keybaseFM,
+      header: undefined,
+      title: keybaseFM,
+    }
+  : undefined
+
+const WhatsNewContainer = Container.namedConnect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps,
+  'WhatsNewContainer'
+)(WhatsNew)
+
+export default WhatsNewContainer
