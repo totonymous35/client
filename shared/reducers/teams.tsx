@@ -81,6 +81,7 @@ const rootReducer = (
       })
     case TeamsGen.setTeamInfo:
       return state.merge({
+        teamIDToName: action.payload.teamIDToName,
         teamNameToAllowPromote: action.payload.teamNameToAllowPromote,
         teamNameToID: action.payload.teamNameToID,
         teamNameToIsOpen: action.payload.teamNameToIsOpen,

@@ -156,6 +156,7 @@ export const makeState = I.Record<Types._State>({
   teamAccessRequestsPending: I.Set(),
   teamBuilding: TeamBuildingConstants.makeSubState(),
   teamCreationError: '',
+  teamIDToName: new Map(),
   teamInviteError: '',
   teamJoinError: '',
   teamJoinSuccess: false,

@@ -789,6 +789,7 @@ function* getTeams(
     const teamNameToAllowPromote: {[key: string]: boolean} = {}
     const teamNameToIsShowcasing: {[key: string]: boolean} = {}
     const teamNameToID: {[key: string]: string} = {}
+    const teamIDToName: Map<Types.TeamID, string> = new Map()
     teams.forEach(team => {
       teamnames.push(team.fqName)
       teammembercounts[team.fqName] = team.memberCount
@@ -797,6 +798,7 @@ function* getTeams(
       teamNameToAllowPromote[team.fqName] = team.allowProfilePromote
       teamNameToIsShowcasing[team.fqName] = team.isMemberShowcased
       teamNameToID[team.fqName] = team.teamID
+      teamIDToName.set(team.teamID, team.fqName)
     })
 
     // Dismiss any stale badges for teams we're no longer in
@@ -823,6 +825,7 @@ function* getTeams(
 
     yield Saga.put(
       TeamsGen.createSetTeamInfo({
+        teamIDToName,
         teamNameToAllowPromote: I.Map(teamNameToAllowPromote),
         teamNameToID: I.Map(teamNameToID),
         teamNameToIsOpen: I.Map(teamNameToIsOpen),
