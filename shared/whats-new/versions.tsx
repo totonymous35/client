@@ -85,16 +85,7 @@ testing testing testing testing testing testing"
 export const LastVersion = (props: VersionProps) => {
   return (
     <Version>
-      <VersionTitle title="Last" />
-      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <VersionTitle title="Last Release" />
     </Version>
   )
 }
@@ -102,16 +93,7 @@ export const LastVersion = (props: VersionProps) => {
 export const LastLastVersion = (props: VersionProps) => {
   return (
     <Version>
-      <VersionTitle title="Last Last" />
-      <NewFeatureRow text="hi testing" noSeparator={true} seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
-      <NewFeatureRow text="hi testing" seen={props.seen} />
+      <VersionTitle title="Last Last Release" />
     </Version>
   )
 }
