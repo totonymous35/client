@@ -474,6 +474,7 @@ export type SetUseNativeFramePayload = {
 export type SetUserSwitchingPayload = {
   readonly payload: _SetUserSwitchingPayload
   readonly type: typeof setUserSwitching
+}
 export type SetWhatsNewLastSeenVersionPayload = {
   readonly payload: _SetWhatsNewLastSeenVersionPayload
   readonly type: typeof setWhatsNewLastSeenVersion
