@@ -5,63 +5,92 @@ import {currentVersion, lastLastVersion, lastVersion, noVersion} from '../consta
 import {CurrentVersion, LastVersion, LastLastVersion} from './versions'
 
 type Props = {
+  onBack: () => void
   onNavigate: (props: {}, selected: string) => void
   onNavigateExternal: (url: string) => void
   seenVersions: {[key: string]: boolean}
 }
 
-const WhatsNew = (props: Props) => {
-  return (
+// Need to switch the order of the scroll view on mobile and desktop so that contentBackground will fill the entire view
+const Wrapper = ({children}: {children: React.ReactNode}) =>
+  Styles.isMobile ? (
+    <Kb.Box2 direction="vertical" alignItems="flex-start" alignSelf="flex-start" fullHeight={true}>
+      <Kb.Box2
+        direction="vertical"
+        alignItems="flex-start"
+        alignSelf="flex-start"
+        fullHeight={true}
+        style={styles.contentBackground}
+      >
+        <Kb.ScrollView style={styles.scrollView}>
+          <Kb.Box2
+            direction="vertical"
+            alignItems="flex-start"
+            alignSelf="flex-start"
+            style={styles.scrollViewInner}
+          >
+            {children}
+          </Kb.Box2>
+        </Kb.ScrollView>
+      </Kb.Box2>
+    </Kb.Box2>
+  ) : (
     <Kb.ScrollView style={styles.scrollView}>
       <Kb.Box2
         direction="vertical"
         alignItems="flex-start"
         alignSelf="flex-start"
         fullHeight={Styles.isMobile}
-        style={styles.container}
+        style={styles.popupContainer}
       >
         <Kb.Box2
           direction="vertical"
           alignItems="flex-start"
           alignSelf="flex-start"
+          fullHeight={Styles.isMobile}
           style={styles.contentBackground}
         >
-          <CurrentVersion
-            seen={props.seenVersions[currentVersion]}
-            onNavigate={props.onNavigate}
-            onNavigateExternal={props.onNavigateExternal}
-          />
-          {lastVersion && lastVersion !== noVersion && (
-            <LastVersion
-              seen={props.seenVersions[lastVersion]}
-              onNavigate={props.onNavigate}
-              onNavigateExternal={props.onNavigateExternal}
-            />
-          )}
-          {lastLastVersion && lastVersion !== noVersion && (
-            <LastLastVersion
-              seen={props.seenVersions[lastLastVersion]}
-              onNavigate={props.onNavigate}
-              onNavigateExternal={props.onNavigateExternal}
-            />
-          )}
+          {children}
         </Kb.Box2>
       </Kb.Box2>
     </Kb.ScrollView>
   )
+
+class WhatsNew extends React.PureComponent<Props> {
+  componentWillUnmount() {
+    this.props.onBack()
+  }
+
+  render() {
+    return (
+      <Wrapper>
+        <CurrentVersion
+          seen={this.props.seenVersions[currentVersion]}
+          onNavigate={this.props.onNavigate}
+          onNavigateExternal={this.props.onNavigateExternal}
+        />
+        {lastVersion && lastVersion !== noVersion && (
+          <LastVersion
+            seen={this.props.seenVersions[lastVersion]}
+            onNavigate={this.props.onNavigate}
+            onNavigateExternal={this.props.onNavigateExternal}
+          />
+        )}
+        {lastLastVersion && lastVersion !== noVersion && (
+          <LastLastVersion
+            seen={this.props.seenVersions[lastLastVersion]}
+            onNavigate={this.props.onNavigate}
+            onNavigateExternal={this.props.onNavigateExternal}
+          />
+        )}
+      </Wrapper>
+    )
+  }
 }
 
-const modalWidth = 284
+const modalWidth = 288
 const modalHeight = 424
 const styles = Styles.styleSheetCreate(() => ({
-  container: Styles.platformStyles({
-    isElectron: {
-      height: modalHeight,
-      maxHeight: modalHeight,
-      maxWidth: modalWidth,
-      width: modalWidth,
-    },
-  }),
   contentBackground: Styles.platformStyles({
     common: {
       backgroundColor: Styles.globalColors.blueGrey,
@@ -71,12 +100,27 @@ const styles = Styles.styleSheetCreate(() => ({
       ...Styles.padding(Styles.globalMargins.tiny),
     },
     isMobile: {
-      ...Styles.padding(Styles.globalMargins.small),
+      paddingLeft: Styles.globalMargins.small,
+      paddingRight: Styles.globalMargins.small,
+    },
+  }),
+  popupContainer: Styles.platformStyles({
+    isElectron: {
+      height: modalHeight,
+      maxHeight: modalHeight,
+      maxWidth: modalWidth,
+      width: modalWidth,
     },
   }),
   scrollView: Styles.platformStyles({
     common: {
       width: '100%',
+    },
+  }),
+  scrollViewInner: Styles.platformStyles({
+    isMobile: {
+      marginBottom: Styles.globalMargins.small,
+      marginTop: Styles.globalMargins.small,
     },
   }),
   versionTitle: {

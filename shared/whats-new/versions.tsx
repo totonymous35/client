@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
 import NewFeatureRow from './new-feature-row'
@@ -30,15 +30,15 @@ const VersionTitle = ({title}: {title: string}) => (
   </Kb.Box2>
 )
 
-export const CurrentVersion = ({seen, onNavigate, onNavigateExternal}: VersionProps) => {
+const pinnedMessageText = `Chat admins can now pin messages.
+📌`
+
+export const CurrentVersion = ({seen}: VersionProps) => {
   return (
     <Version>
-      <NewFeatureRow text="hi testing" noSeparator={true} seen={seen} />
       <NewFeatureRow
-        text="testing testing testing testing testing testing testing testing
-testing testing testing testing testing testing testing testing testing testing
-testing testing testing testing testing testing testing testing testing testing
-testing testing testing testing testing testing"
+        noSeparator={true}
+        text={pinnedMessageText}
         image={testingImage}
         imageStyle={Styles.collapseStyles([
           styles.roundedImage,
@@ -46,14 +46,6 @@ testing testing testing testing testing testing"
           Styles.isMobile && {borderRadius: 100, width: 100},
         ])}
         seen={seen}
-        primaryButtonText="Read the doc"
-        onPrimaryButtonClick={() => {
-          onNavigateExternal('https://keybase.io/docs')
-        }}
-        secondaryButtonText="Try it out"
-        onSecondaryButtonClick={() => {
-          onNavigate({}, 'walletOnboarding')
-        }}
       />
       <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
@@ -78,22 +70,99 @@ testing testing testing testing testing testing"
       <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }
 
-export const LastVersion = (props: VersionProps) => {
+export const LastVersion = ({seen}: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last Release" />
+      <NewFeatureRow
+        noSeparator={true}
+        text={pinnedMessageText}
+        image={testingImage}
+        imageStyle={Styles.collapseStyles([
+          styles.roundedImage,
+          // Need to set fixed width on native to get image width not to be set to maxWidth
+          Styles.isMobile && {borderRadius: 100, width: 100},
+        ])}
+        seen={seen}
+      />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }
 
-export const LastLastVersion = (props: VersionProps) => {
+export const LastLastVersion = ({seen}: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last Last Release" />
+      <NewFeatureRow
+        noSeparator={true}
+        text={pinnedMessageText}
+        image={testingImage}
+        imageStyle={Styles.collapseStyles([
+          styles.roundedImage,
+          // Need to set fixed width on native to get image width not to be set to maxWidth
+          Styles.isMobile && {borderRadius: 100, width: 100},
+        ])}
+        seen={seen}
+      />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }

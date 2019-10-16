@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as Sb from '../stories/storybook'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
@@ -101,6 +101,7 @@ const load = () => {
     })
     .add('Whats New List', () => (
       <WhatsNew
+        onBack={Sb.action('onBack')}
         onNavigate={Sb.action('onNavigate')}
         onNavigateExternal={Sb.action('onNavigateExternal')}
         seenVersions={{

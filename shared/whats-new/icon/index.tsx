@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as Kb from '../../common-adapters'
 import * as Styles from '../../styles'
 import {IconStyle} from '../../common-adapters/icon'
@@ -17,7 +17,6 @@ type Props = {
 type PopupProps = Props & {
   // Desktop only
   attachToRef: React.RefObject<Kb.Box2>
-  onClose: () => void
 }
 
 // TODO @jacob: Remove this when rainbow gradient is added as a PNG asset
@@ -95,7 +94,7 @@ const HeaderIcon = (props: Props) => {
 }
 
 export const HeaderIconWithPopup = (props: PopupProps) => {
-  const {badgeColor, color, newRelease, onClose, attachToRef} = props
+  const {badgeColor, color, newRelease, attachToRef} = props
   const [popupVisible, setPopupVisible] = React.useState(false)
   const baseColor = Styles.globalColors.black_50
   const iconColor = color ? color : baseColor
@@ -132,7 +131,6 @@ export const HeaderIconWithPopup = (props: PopupProps) => {
           position="bottom right"
           positionFallbacks={['bottom right', 'bottom center']}
           onHidden={() => {
-            onClose()
             setPopupVisible(false)
           }}
         />

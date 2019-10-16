@@ -54,6 +54,7 @@ function SettingsNav(props: Props) {
                   {
                     iconComponent: WhatsNewIcon,
                     onClick: () => props.onTabChange(Constants.whatsNewTab),
+                    subText: `What's new?`,
                     text: keybaseFM,
                   },
                 ]

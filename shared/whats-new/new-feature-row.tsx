@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
 import {FeatureWithSeenState} from '../constants/types/whats-new'
@@ -35,7 +35,10 @@ const NewFeature = (props: Props) => {
     <Kb.Box2
       direction="horizontal"
       fullWidth={true}
-      style={Styles.collapseStyles([styles.container, props.noSeparator ? {marginTop: 0} : {}])}
+      style={Styles.collapseStyles([
+        styles.rowContainer,
+        props.noSeparator ? {marginTop: 0} : {marginTop: Styles.globalMargins.tiny},
+      ])}
     >
       {/* Badging */}
       {!props.seen && (
@@ -77,11 +80,6 @@ const styles = Styles.styleSheetCreate(() => ({
     // Apply margins to buttons so that when they wrap there is vertical space between them
     marginTop: Styles.globalMargins.xsmall,
   },
-  container: {
-    ...Styles.globalStyles.fullWidth,
-    alignSelf: 'flex-start',
-    marginTop: Styles.globalMargins.tiny,
-  },
   contentContainer: {
     ...Styles.globalStyles.rounded,
     backgroundColor: Styles.globalColors.white,
@@ -89,6 +87,10 @@ const styles = Styles.styleSheetCreate(() => ({
     paddingLeft: Styles.globalMargins.small,
     paddingRight: Styles.globalMargins.small,
     paddingTop: Styles.globalMargins.tiny,
+  },
+  rowContainer: {
+    ...Styles.globalStyles.fullWidth,
+    alignSelf: 'flex-start',
   },
   image: {
     alignSelf: 'center',
