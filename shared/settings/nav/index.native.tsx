@@ -7,7 +7,7 @@ import {NativeSectionList, Text} from '../../common-adapters/mobile.native'
 import {isAndroid} from '../../constants/platform'
 import SettingsItem from './settings-item'
 import flags from '../../util/feature-flags'
-import WhatsNewIcon from '../../whats-new/header-icon/container'
+import WhatsNewIcon from '../../whats-new/icon/container'
 import {Props} from './index'
 
 const renderItem = ({item}) => {

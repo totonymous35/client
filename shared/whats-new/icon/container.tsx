@@ -26,8 +26,7 @@ const HeaderIconContainer = Container.connect(
   (stateProps, _, ownProps: OwnProps) => ({
     badgeColor: ownProps.badgeColor,
     color: ownProps.color,
-    newRelease: true,
-    /* newRelease: anyVersionsUnseen(stateProps.lastSeenVersion), */
+    newRelease: anyVersionsUnseen(stateProps.lastSeenVersion),
     style: ownProps.style,
   })
 )(HeaderIconComponent)

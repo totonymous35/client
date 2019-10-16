@@ -2,7 +2,7 @@ import React from 'react'
 import * as Sb from '../stories/storybook'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
-import HeaderIcon from './header-icon/'
+import HeaderIcon from './icon/'
 import NewFeatureRow from './new-feature-row'
 import WhatsNew from '.'
 

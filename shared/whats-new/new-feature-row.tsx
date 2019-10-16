@@ -7,6 +7,7 @@ type Props = FeatureWithSeenState & {
   noSeparator?: boolean
   onPrimaryButtonClick?: () => void
   onSecondaryButtonClick?: () => void
+  imageStyle?: Styles.StylesCrossPlatform
 }
 
 const NewFeature = (props: Props) => {
@@ -43,9 +44,14 @@ const NewFeature = (props: Props) => {
       <Kb.Box2 direction="vertical" fullWidth={true} style={styles.contentContainer}>
         <Kb.Text type="Body">{props.text}</Kb.Text>
         <Kb.Box2 direction="vertical" style={styles.imageContainer}>
-          {props.image && <Kb.Image src={props.image} style={styles.image} />}
+          {props.image && (
+            <Kb.RequireImage
+              src={props.image}
+              style={Styles.collapseStyles([styles.image, props.imageStyle])}
+            />
+          )}
         </Kb.Box2>
-        <Kb.Box2 direction="horizontal" style={styles.buttonRowContainer} gap="tiny">
+        <Kb.Box2 direction="horizontal" style={styles.buttonRowContainer} gap="xtiny">
           {primaryButton}
           {secondaryButton}
         </Kb.Box2>
@@ -64,7 +70,6 @@ const styles = Styles.styleSheetCreate(() => ({
     marginTop: 13,
   },
   buttonRowContainer: {
-    ...Styles.globalStyles.flexWrap,
     alignSelf: 'flex-start',
     justifyContent: 'space-between',
   },

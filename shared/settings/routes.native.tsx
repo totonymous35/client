@@ -2,6 +2,7 @@ import * as Constants from '../constants/settings'
 import AboutTab from './about-container'
 import AdvancedTab from './advanced/container'
 import ChatTab from './chat/container'
+import DisplayTab from './display/container'
 import FsTab from './files/container'
 import WalletsTab from '../wallets/wallet/container'
 import FeedbackTab from './feedback/container'
@@ -29,11 +30,12 @@ export const newRoutes = {
   // TODO connect broken
   [Constants.advancedTab]: {getScreen: (): typeof AdvancedTab => require('./advanced/container').default},
   [Constants.chatTab]: {getScreen: (): typeof ChatTab => require('./chat/container').default},
+  [Constants.displayTab]: {getScreen: (): typeof DisplayTab => require('./display/container').defaul},
   [Constants.fsTab]: {getScreen: (): typeof FsTab => require('./files/container').default},
   [Constants.walletsTab]: {
     getScreen: (): typeof WalletsTab => require('../wallets/wallet/container').default,
   },
-  [Constants.feedbackTab]: {getScreen: (): typeof FeedbackTab => require('./feedback/container').default},
+  [Constants.feedbackTab]: {getScreen: (): typeof FeedbackTab => require('./feedback/container').defult},
   // TODO connect broken
   [Constants.invitationsTab]: {
     getScreen: (): typeof InvitationsTab => require('./invites/container').default,

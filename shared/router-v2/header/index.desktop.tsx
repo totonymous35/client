@@ -8,7 +8,7 @@ import * as Window from '../../util/window-management'
 import {BrowserWindow} from '../../util/safe-electron.desktop'
 import AirdropBanner from '../../wallets/airdrop/banner/container'
 import SyncingFolders from './syncing-folders'
-import {HeaderIconWithPopup as WhatsNewIconWithPopup} from '../../whats-new/header-icon/container'
+import {HeaderIconWithPopup as WhatsNewIconWithPopup} from '../../whats-new/icon/container'
 import flags from '../../util/feature-flags'
 import * as ReactIs from 'react-is'
 

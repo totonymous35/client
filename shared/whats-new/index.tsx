@@ -24,7 +24,6 @@ const WhatsNew = (props: Props) => {
           direction="vertical"
           alignItems="flex-start"
           alignSelf="flex-start"
-          fullHeight={Styles.isMobile}
           style={styles.contentBackground}
         >
           <CurrentVersion
@@ -78,10 +77,6 @@ const styles = Styles.styleSheetCreate(() => ({
   scrollView: Styles.platformStyles({
     common: {
       width: '100%',
-    },
-    isMobile: {
-      height: '100%',
-      maxHeight: '100%',
     },
   }),
   versionTitle: {

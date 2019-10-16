@@ -22,7 +22,7 @@ const mergeProps = (
   stateProps: ReturnType<typeof mapStateToProps>,
   dispatchProps: ReturnType<typeof mapDispatchToProps>
 ) => {
-  const seenVersions = getSeenVersions('0.0.0')
+  const seenVersions = getSeenVersions(stateProps.lastSeenVersion)
   return {
     onNavigate: dispatchProps._onNavigate,
     onNavigateExternal: dispatchProps._onNavigateExternal,

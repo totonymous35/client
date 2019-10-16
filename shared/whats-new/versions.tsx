@@ -5,7 +5,7 @@ import NewFeatureRow from './new-feature-row'
 
 /* Include images */
 /* const imageName = require('../images/release/MAJ.MIN.PATCH/name.png') */
-const testingImage = require('../images/releases/4.2.1/1.png')
+const testingImage = require('../images/releases/4.7.0/pinned-message.png')
 
 type VersionProps = {
   seen: boolean
@@ -40,8 +40,13 @@ testing testing testing testing testing testing testing testing testing testing
 testing testing testing testing testing testing testing testing testing testing
 testing testing testing testing testing testing"
         image={testingImage}
+        imageStyle={Styles.collapseStyles([
+          styles.roundedImage,
+          // Need to set fixed width on native to get image width not to be set to maxWidth
+          Styles.isMobile && {borderRadius: 100, width: 100},
+        ])}
         seen={seen}
-        primaryButtonText="Read the docs"
+        primaryButtonText="Read the doc"
         onPrimaryButtonClick={() => {
           onNavigateExternal('https://keybase.io/docs')
         }}
@@ -50,6 +55,22 @@ testing testing testing testing testing testing"
           onNavigate({}, 'walletOnboarding')
         }}
       />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
+      <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
       <NewFeatureRow text="hi testing" seen={seen} />
@@ -96,6 +117,17 @@ export const LastLastVersion = (props: VersionProps) => {
 }
 
 const styles = Styles.styleSheetCreate(() => ({
+  roundedImage: Styles.platformStyles({
+    common: {
+      borderColor: Styles.globalColors.grey,
+      borderWidth: Styles.globalMargins.xxtiny,
+    },
+    isElectron: {
+      // Pass borderRadius as a number to the image on mobile using collapseStyles
+      borderRadius: '100%',
+      borderStyle: 'solid',
+    },
+  }),
   versionTitle: {
     color: Styles.globalColors.black_50,
     marginBottom: Styles.globalMargins.tiny,
