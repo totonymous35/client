@@ -11,11 +11,19 @@ const mapStateToProps = (state: Container.TypedState) => ({
 const mapDispatchToProps = (dispatch: Container.TypedDispatch) => ({
   // Navigate primary/secondary button click
   _onNavigate: (props: {}, selected: string) => {
-    dispatch(
-      RouteTreeGen.createNavigateAppend({
-        path: [{props, selected}],
-      })
-    )
+    if (Object.keys(props).length) {
+      dispatch(
+        RouteTreeGen.createNavigateAppend({
+          path: [{props, selected}],
+        })
+      )
+    } else {
+      dispatch(
+        RouteTreeGen.createNavigateAppend({
+          path: [selected],
+        })
+      )
+    }
   },
   _onNavigateExternal: (url: string) => openURL(url),
 
@@ -45,14 +53,13 @@ const mergeProps = (
   }
 }
 
-// @ts-ignore
 WhatsNew.navigationOptions = Container.isMobile
   ? {
       HeaderTitle: keybaseFM,
       header: undefined,
       title: keybaseFM,
     }
-  : undefined
+  : {}
 
 const WhatsNewContainer = Container.namedConnect(
   mapStateToProps,

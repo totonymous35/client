@@ -1,11 +1,13 @@
 import * as React from 'react'
 import * as Kb from '../common-adapters'
 import * as Styles from '../styles'
+import {accountTab, displayTab, contactsTab} from '../constants/settings'
 import NewFeatureRow from './new-feature-row'
 
 /* Include images */
 /* const imageName = require('../images/release/MAJ.MIN.PATCH/name.png') */
-const testingImage = require('../images/releases/4.7.0/pinned-message.png')
+const pinnedMessageImage = require('../images/releases/4.7.0/pinned-message.png')
+const darkModeImage = require('../images/releases/4.7.0/dark-mode.png')
 
 type VersionProps = {
   seen: boolean
@@ -30,139 +32,66 @@ const VersionTitle = ({title}: {title: string}) => (
   </Kb.Box2>
 )
 
-const pinnedMessageText = `Chat admins can now pin messages.
-📌`
-
-export const CurrentVersion = ({seen}: VersionProps) => {
+export const CurrentVersion = ({seen, onNavigate, onNavigateExternal}: VersionProps) => {
   return (
     <Version>
       <NewFeatureRow
         noSeparator={true}
-        text={pinnedMessageText}
-        image={testingImage}
+        seen={seen}
+        image={darkModeImage}
+        primaryButtonText="Go dark"
+        onPrimaryButtonClick={() => {
+          onNavigate({fromKey: accountTab}, displayTab)
+        }}
+      >
+        Dark mode is here! You can access theme settings under the Display section of settings.
+      </NewFeatureRow>
+      <NewFeatureRow
+        seen={seen}
+        primaryButtonText={Styles.isMobile ? 'Try it' : 'Read the doc'}
+        onPrimaryButtonClick={() => {
+          Styles.isMobile
+            ? onNavigate({}, contactsTab)
+            : onNavigateExternal('https://keybase.io/docs/chat/phones_and_emails')
+        }}
+        secondaryButtonText={Styles.isMobile ? 'Read the doc' : undefined}
+        onSecondaryButtonClick={() => {
+          Styles.isMobile && onNavigateExternal('https://keybase.io/docs/chat/phones_and_emails')
+        }}
+      >
+        You can now start a conversation with a phone number or email address
+        {` `}
+        <Kb.Emoji allowFontScaling={true} size={Styles.globalMargins.small} emojiName=":phone:" />
+      </NewFeatureRow>
+      <NewFeatureRow
+        seen={seen}
+        image={pinnedMessageImage}
         imageStyle={Styles.collapseStyles([
           styles.roundedImage,
           // Need to set fixed width on native to get image width not to be set to maxWidth
-          Styles.isMobile && {borderRadius: 100, width: 100},
+          Styles.isMobile && {borderRadius: 150, width: 150},
         ])}
-        seen={seen}
-      />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
+      >
+        Chat admins can now pin messages.
+        {` `}
+        <Kb.Emoji size={Styles.globalMargins.small} emojiName=":pushpin:" />
+      </NewFeatureRow>
     </Version>
   )
 }
 
-export const LastVersion = ({seen}: VersionProps) => {
+export const LastVersion = (_: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last Release" />
-      <NewFeatureRow
-        noSeparator={true}
-        text={pinnedMessageText}
-        image={testingImage}
-        imageStyle={Styles.collapseStyles([
-          styles.roundedImage,
-          // Need to set fixed width on native to get image width not to be set to maxWidth
-          Styles.isMobile && {borderRadius: 100, width: 100},
-        ])}
-        seen={seen}
-      />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }
 
-export const LastLastVersion = ({seen}: VersionProps) => {
+export const LastLastVersion = (_: VersionProps) => {
   return (
     <Version>
       <VersionTitle title="Last Last Release" />
-      <NewFeatureRow
-        noSeparator={true}
-        text={pinnedMessageText}
-        image={testingImage}
-        imageStyle={Styles.collapseStyles([
-          styles.roundedImage,
-          // Need to set fixed width on native to get image width not to be set to maxWidth
-          Styles.isMobile && {borderRadius: 100, width: 100},
-        ])}
-        seen={seen}
-      />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
-      <NewFeatureRow text="hi testing" seen={seen} />
     </Version>
   )
 }

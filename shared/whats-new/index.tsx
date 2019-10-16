@@ -35,28 +35,29 @@ const Wrapper = ({children}: {children: React.ReactNode}) =>
       </Kb.Box2>
     </Kb.Box2>
   ) : (
-    <Kb.ScrollView style={styles.scrollView}>
-      <Kb.Box2
-        direction="vertical"
-        alignItems="flex-start"
-        alignSelf="flex-start"
-        fullHeight={Styles.isMobile}
-        style={styles.popupContainer}
-      >
+    <Kb.Box2
+      direction="vertical"
+      alignItems="flex-start"
+      alignSelf="flex-start"
+      fullHeight={true}
+      style={styles.popupContainer}
+    >
+      <Kb.ScrollView style={styles.scrollView}>
         <Kb.Box2
           direction="vertical"
           alignItems="flex-start"
           alignSelf="flex-start"
-          fullHeight={Styles.isMobile}
+          fullHeight={true}
           style={styles.contentBackground}
         >
           {children}
         </Kb.Box2>
-      </Kb.Box2>
-    </Kb.ScrollView>
+      </Kb.ScrollView>
+    </Kb.Box2>
   )
 
 class WhatsNew extends React.PureComponent<Props> {
+  static navigationOptions = {}
   componentWillUnmount() {
     this.props.onBack()
   }
@@ -99,10 +100,6 @@ const styles = Styles.styleSheetCreate(() => ({
     isElectron: {
       ...Styles.padding(Styles.globalMargins.tiny),
     },
-    isMobile: {
-      paddingLeft: Styles.globalMargins.small,
-      paddingRight: Styles.globalMargins.small,
-    },
   }),
   popupContainer: Styles.platformStyles({
     isElectron: {
@@ -120,7 +117,9 @@ const styles = Styles.styleSheetCreate(() => ({
   scrollViewInner: Styles.platformStyles({
     isMobile: {
       marginBottom: Styles.globalMargins.small,
-      marginTop: Styles.globalMargins.small,
+      marginLeft: Styles.globalMargins.small,
+      marginRight: Styles.globalMargins.small,
+      marginTop: Styles.globalMargins.small + 2,
     },
   }),
   versionTitle: {

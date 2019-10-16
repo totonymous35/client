@@ -6,7 +6,6 @@ export type WhatsNewVersion = CurrentVersion | LastVersion | LastLastVersion | N
 export type WhatsNewVersions = [CurrentVersion, LastVersion, LastLastVersion]
 
 export type Feature = {
-  text: string
   primaryButtonText?: string
   secondaryButtonText?: string
   image?: string | null

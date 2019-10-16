@@ -4,6 +4,7 @@ import * as Styles from '../styles'
 import {FeatureWithSeenState} from '../constants/types/whats-new'
 
 type Props = FeatureWithSeenState & {
+  children?: React.ReactNode
   noSeparator?: boolean
   onPrimaryButtonClick?: () => void
   onSecondaryButtonClick?: () => void
@@ -45,7 +46,7 @@ const NewFeature = (props: Props) => {
         <Kb.Badge height={8} badgeStyle={styles.badgeStyle} containerStyle={styles.badgeContainerStyle} />
       )}
       <Kb.Box2 direction="vertical" fullWidth={true} style={styles.contentContainer}>
-        <Kb.Text type="Body">{props.text}</Kb.Text>
+        <Kb.Text type="Body">{props.children}</Kb.Text>
         <Kb.Box2 direction="vertical" style={styles.imageContainer}>
           {props.image && (
             <Kb.RequireImage
@@ -88,17 +89,18 @@ const styles = Styles.styleSheetCreate(() => ({
     paddingRight: Styles.globalMargins.small,
     paddingTop: Styles.globalMargins.tiny,
   },
+  image: {
+    alignSelf: 'center',
+    maxHeight: 150,
+    maxWidth: 300,
+  },
+  imageContainer: {
+    marginBottom: Styles.globalMargins.xtiny,
+    marginTop: Styles.globalMargins.tiny,
+  },
   rowContainer: {
     ...Styles.globalStyles.fullWidth,
     alignSelf: 'flex-start',
-  },
-  image: {
-    alignSelf: 'center',
-    maxHeight: 96,
-    maxWidth: 216,
-  },
-  imageContainer: {
-    marginTop: Styles.globalMargins.tiny,
   },
 }))
 
